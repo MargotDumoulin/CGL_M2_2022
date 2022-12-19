@@ -1,0 +1,27 @@
+.homepage-image > svg {
+    width: 560px;
+    height: 400px;
+}
+
+.container-fluid {
+    min-height: calc(100vh - 48px);
+}
+
+.container-fluid > div.row, .container-fluid > div.row > main {
+    min-height: inherit;
+}
+
+.homepage-button > button {
+    width: fit-content;
+}
+
+.homepage-container, .homepage-subtitle, .homepage-button {
+    display: flex;
+    justify-content: center;
+}
+
+.homepage-container {
+    align-content: center;
+    flex-direction: column;
+    min-height: inherit;
+}

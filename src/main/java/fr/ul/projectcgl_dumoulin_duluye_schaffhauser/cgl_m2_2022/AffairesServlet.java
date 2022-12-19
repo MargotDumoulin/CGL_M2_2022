@@ -5,17 +5,24 @@ import jakarta.servlet.http.*;
 import jakarta.servlet.annotation.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(
-        name = "Affaire",
-        urlPatterns = {"/affaire"}
+        name = "Affaires",
+        urlPatterns = {"/affaires"}
 )
-public class AffaireServlet extends HttpServlet {
+public class AffairesServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        String message = request.getParameter("message");
-        request.setAttribute("text", message);
-        request.getRequestDispatcher("/affaire.jsp").forward(request, response);
+
+        // Basic example of ArrayList injection
+        List<String> affaires = new ArrayList<String>();
+        affaires.add("Johnny");
+        affaires.add("Tim");
+
+        request.setAttribute("affaires", affaires);
+        request.getRequestDispatcher("/affaires.jsp").forward(request, response);
     }
 }
