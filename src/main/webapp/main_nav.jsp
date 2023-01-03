@@ -17,7 +17,7 @@
             </a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="apporteurs-affaires">
+            <a class="nav-link" href="apporteurs">
               <span data-feather="file" class="align-text-bottom"></span>
               Apporteurs d'affaires
             </a>
