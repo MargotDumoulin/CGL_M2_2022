@@ -19,7 +19,7 @@ public class AffairesServlet extends HttpServlet {
             throws ServletException, IOException {
 
         Apporteur app = new Apporteur(0, true, "DUMOULIN", "Margot");
-        Map<Number, Double> commissionsPerso = new HashMap<Number, Double>();
+        Map<Integer, Double> commissionsPerso = new HashMap<Integer, Double>();
         commissionsPerso.put(0, 95.0);
         commissionsPerso.put(1, 5.0);
         Affaire aff = new Affaire(0, app, new Date(), 100, commissionsPerso);

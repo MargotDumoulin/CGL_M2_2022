@@ -10,9 +10,11 @@ public class Affaire {
     private Apporteur apporteur;
     private Date date;
     private float commission;
-    private Map<Number, Double> commissionsPerso;
+    
+    // Liste avec id de l'apporteur et montant de la commission associée 
+    private Map<Integer, Double> commissionsPerso;
 
-    public Affaire(int id, Apporteur apporteur, Date date, float commission, Map<Number, Double> commissionsPerso) {
+    public Affaire(int id, Apporteur apporteur, Date date, float commission, Map<Integer, Double> commissionsPerso) {
         this.id = id;
         this.apporteur = apporteur;
         this.date = date;
@@ -25,7 +27,7 @@ public class Affaire {
         this.apporteur = apporteur;
         this.date = date;
         this.commission = commission;
-        this.commissionsPerso = new HashMap<Number, Double>();
+        this.commissionsPerso = new HashMap<Integer, Double>();
     }
 
     public int getId() {
@@ -60,11 +62,11 @@ public class Affaire {
         this.commission = commission;
     }
 
-    public Map<Number, Double> getCommissionsPerso() {
+    public Map<Integer, Double> getCommissionsPerso() {
         return commissionsPerso;
     }
 
-    public void setCommissionsPerso(Map<Number, Double> commissionsPerso) {
+    public void setCommissionsPerso(Map<Integer, Double> commissionsPerso) {
         this.commissionsPerso = commissionsPerso;
     }
 }
