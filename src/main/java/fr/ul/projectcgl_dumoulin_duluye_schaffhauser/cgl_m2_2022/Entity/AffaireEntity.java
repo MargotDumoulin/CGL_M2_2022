@@ -13,7 +13,7 @@ import java.util.Date;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity(name = "Affaire")
-@Table(name="affaire")
+@Table(name = "affaire")
 public class AffaireEntity {
 
     @Id
@@ -24,5 +24,5 @@ public class AffaireEntity {
     private ApporteurEntity apporteur;
 
     private Date date;
-    private Double commission;
+    private Double commissionGlobale;
 }
