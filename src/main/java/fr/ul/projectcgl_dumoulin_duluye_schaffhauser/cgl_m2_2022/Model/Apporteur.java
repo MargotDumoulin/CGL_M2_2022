@@ -11,19 +11,19 @@ import java.util.List;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class Apporteur {
-    private int id;
-    private boolean affilie;
+    private Long id;
+    private Boolean affilie;
     private String nom;
     private String prenom;
-    private List<Apporteur> parrains;
+    private Apporteur parrain;
+    private List<Affaire> affaires;
 
-    public Apporteur(int id, boolean affilie, String nom, String prenom) {
+    public Apporteur(Long id, Boolean affilie, String nom, String prenom) {
         this.id = id;
         this.affilie = affilie;
         this.nom = nom;
         this.prenom = prenom;
-        this.parrains = new ArrayList<>();
+        this.parrain = null;
     }
 }

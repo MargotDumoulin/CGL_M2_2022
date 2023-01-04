@@ -18,13 +18,13 @@ public class AffairesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Apporteur app1 = new Apporteur(0, true, "DUMOULIN", "Margot");
-        Apporteur app2 = new Apporteur(0, true, "DULUYE", "Antony");
-        Map<Integer, Double> commissionsPerso = new HashMap<Integer, Double>();
-        commissionsPerso.put(0, 95.0);
-        commissionsPerso.put(1, 5.0);
-        Affaire aff1 = new Affaire(0, app1, new Date(), 100, commissionsPerso);
-        Affaire aff2 = new Affaire(1, app2, new Date(), 100, commissionsPerso);
+        Apporteur app1 = new Apporteur(0L, true, "DUMOULIN", "Margot");
+        Apporteur app2 = new Apporteur(1L, true, "DULUYE", "Antony");
+        Map<Apporteur, Double> commissionsPerso = new HashMap<>();
+        commissionsPerso.put(app1, 95.0);
+        commissionsPerso.put(app2, 5.0);
+        Affaire aff1 = new Affaire(0L, app1, new Date(), 100D, commissionsPerso);
+        Affaire aff2 = new Affaire(1L, app2, new Date(), 100D, commissionsPerso);
         List<Affaire> affaires = new ArrayList<Affaire>();
 
         String appId = request.getParameter("appId");

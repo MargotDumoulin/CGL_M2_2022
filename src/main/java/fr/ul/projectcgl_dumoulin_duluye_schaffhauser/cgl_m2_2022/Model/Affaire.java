@@ -12,17 +12,16 @@ import java.util.Map;
 @Getter
 @Setter
 @AllArgsConstructor
-@NoArgsConstructor
 public class Affaire {
-    private int id;
+    private Long id;
     private Apporteur apporteur;
     private Date date;
-    private float commission;
+    private Double commission;
     
     // Liste avec id de l'apporteur et montant de la commission associée 
-    private Map<Integer, Double> commissionsPerso;
+    private Map<Apporteur, Double> commissionsPerso;
 
-    public Affaire(int id, Apporteur apporteur, Date date, float commission) {
+    public Affaire(Long id, Apporteur apporteur, Date date, Double commission) {
         this.id = id;
         this.apporteur = apporteur;
         this.date = date;
