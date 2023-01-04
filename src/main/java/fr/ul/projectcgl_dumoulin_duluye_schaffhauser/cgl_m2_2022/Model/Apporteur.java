@@ -12,7 +12,7 @@ import java.util.List;
 @AllArgsConstructor
 public class Apporteur {
     private Long id;
-    private Boolean affilie;
+    private boolean affilie;
     private String nom;
     private String prenom;
     private Apporteur parrain;
@@ -20,7 +20,7 @@ public class Apporteur {
     private List<CommissionPerso> commissionsMMoins1;
     private List<CommissionPerso> commissionsMMoins2;
 
-    public Apporteur(Long id, Boolean affilie, String nom, String prenom) {
+    public Apporteur(Long id, boolean affilie, String nom, String prenom) {
         this.id = id;
         this.affilie = affilie;
         this.nom = nom;

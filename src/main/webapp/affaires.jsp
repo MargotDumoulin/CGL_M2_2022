@@ -42,14 +42,13 @@
                                 <tr>
                                     <td><c:out value="${ affaire.id }" /></td>
                                     <td><fmt:formatDate value="${ affaire.date }" pattern="yyyy-MM-dd" /></td>
-                                    <td><c:out value="${ affaire.commission }" />€</td>
+                                    <td><c:out value="${ affaire.commissionGlobale }" />€</td>
                                     <td><c:out value="${ affaire.apporteur.prenom }" /> <c:out value="${ affaire.apporteur.nom }" /></td>
                                     <td>
-                                        <c:forEach items="${affaire.commissionsPerso}" var="entry">
-                                            <c:if test = "${entry.key == affaire.apporteur.id}">
-                                                <c:out value="${entry.value}" />€
+                                        <c:forEach items="${affaire.commissions}" var="commission">
+                                            <c:if test = "${commission.apporteur.id == affaire.apporteur.id}">
+                                                <c:out value="${commission.montant}" />€
                                             </c:if>
-
                                         </c:forEach>
                                     </td>
                                 </tr>
