@@ -1,6 +1,5 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Controller;
 
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Model.Affaire;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Model.Apporteur;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -9,7 +8,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
 
 @WebServlet(
         name = "Apporteurs",
@@ -20,9 +20,11 @@ public class ApporteursServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Apporteur app1 = new Apporteur(0, true, "DUMOULIN", "Margot");
-        Apporteur app2 = new Apporteur(1, false, "DULUYE", "Antony");
-        List<Apporteur> apporteurs = new ArrayList<Apporteur>();
+        List<Apporteur> apporteurs = new ArrayList<>();
+
+        Apporteur app1 = new Apporteur(0L, true, "DUMOULIN", "Margot");
+        Apporteur app2 = new Apporteur(1L, false, "DULUYE", "Antony");
+
         apporteurs.add(app1);
         apporteurs.add(app2);
 
