@@ -59,7 +59,16 @@
                                 <tr>
                                     <td colspan="7" class="hidden-row">
                                         <div class="collapse" id="affaire${affaire.id}">
-                                            <div>La liste des parrains et leurs commissions....</div>
+                                            <div>
+                                                Liste des parrains et de leurs commissions associées :
+                                                <ul>
+                                                    <c:forEach items="${affaire.commissions}" var="commission">
+                                                        <c:if test = "${commission.apporteur.id != affaire.apporteur.id}">
+                                                            <li><c:out value="${commission.apporteur.prenom}"/> <c:out value="${commission.apporteur.nom}"/> : <c:out value="${commission.montant}" />€</li>
+                                                        </c:if>
+                                                    </c:forEach>
+                                                </ul>
+                                            </div>
                                         </div>
                                     </td>
                                 </tr>
