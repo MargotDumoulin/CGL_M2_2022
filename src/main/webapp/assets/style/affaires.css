@@ -1,0 +1,19 @@
+.hidden-row {
+    padding: 0 !important;
+    border-bottom: none;
+}
+
+.custom-chevron-button-table {
+    margin-left: 20px;
+    display: flex;
+    margin-top: 4px;
+}
+
+.hidden-row > div {
+    display: flex;
+    background-color: #f8f9fa;
+}
+
+.hidden-row > div > div {
+    padding: 10px;
+}
