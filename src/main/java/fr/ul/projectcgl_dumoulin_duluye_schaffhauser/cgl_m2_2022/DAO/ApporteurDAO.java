@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 
 public class ApporteurDAO {
 
-    public Stream<ApporteurEntity> getAll() {
+    public static Stream<ApporteurEntity> getAll() {
         return HibernateUtils.getSession()
                 .createQuery("from Apporteur ", ApporteurEntity.class)
                 .getResultStream();

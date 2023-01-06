@@ -12,10 +12,12 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "Parrainage")
-@Table(name = "parrainage")
-public class ParrainageEntity {
+@Entity(name = "CommissionPerso")
+@Table(name = "commission_perso")
+public class CommissionEntity {
 
     @EmbeddedId
-    private ParrainageEntityId id;
+    private CommissionEntityId id;
+
+    private Double montant;
 }

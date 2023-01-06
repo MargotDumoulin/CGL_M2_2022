@@ -24,5 +24,7 @@ public class AffaireEntity {
     private ApporteurEntity apporteur;
 
     private Date date;
+
+    @Column(name = "COMMISSION_GLOBALE")
     private Double commissionGlobale;
 }

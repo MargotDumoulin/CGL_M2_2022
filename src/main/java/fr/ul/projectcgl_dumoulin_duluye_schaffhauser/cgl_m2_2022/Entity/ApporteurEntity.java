@@ -27,5 +27,6 @@ public class ApporteurEntity {
     private ApporteurEntity parrain;
 
     @OneToMany(mappedBy = "apporteur")
+    @JoinColumn(table = "AFFAIRE", referencedColumnName = "APPORTEUR_ID")
     private List<AffaireEntity> affaires;
 }

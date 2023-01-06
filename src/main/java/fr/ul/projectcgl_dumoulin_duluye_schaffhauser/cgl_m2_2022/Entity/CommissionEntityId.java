@@ -6,10 +6,9 @@ import jakarta.persistence.ManyToOne;
 import java.io.Serializable;
 
 @Embeddable
-public class ParrainageEntityId implements Serializable {
-
+public class CommissionEntityId implements Serializable {
     @ManyToOne
-    private ApporteurEntity parrain;
+    private AffaireEntity affaire;
     @ManyToOne
-    private ApporteurEntity filleul;
+    private ApporteurEntity apporteur;
 }
