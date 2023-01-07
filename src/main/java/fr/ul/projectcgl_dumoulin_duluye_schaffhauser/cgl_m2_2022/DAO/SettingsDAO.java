@@ -13,7 +13,7 @@ public class SettingsDAO {
     public static List<SettingEntity> getAll(){
         Transaction transaction = null;
         try {
-            Session session = HibernateUtils.getSessionFactory().openSession();
+            Session session = HibernateUtils.getSession();
             transaction = session.beginTransaction();
             List<SettingEntity> settings = session.createQuery("FROM Setting ", SettingEntity.class).list();
             transaction.commit();

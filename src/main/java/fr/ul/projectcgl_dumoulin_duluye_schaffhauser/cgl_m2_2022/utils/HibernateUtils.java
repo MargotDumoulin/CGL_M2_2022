@@ -26,6 +26,7 @@ public class HibernateUtils {
                     .addAnnotatedClass(ApporteurEntity.class)
                     .addAnnotatedClass(AffaireEntity.class)
                     .addAnnotatedClass(CommissionEntity.class)
+                    .addAnnotatedClass(SettingEntity.class)
                     .buildSessionFactory()
                     .openSession();
         }

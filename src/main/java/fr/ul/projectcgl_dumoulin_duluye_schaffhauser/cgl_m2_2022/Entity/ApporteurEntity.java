@@ -26,7 +26,7 @@ public class ApporteurEntity {
     @OneToOne
     private ApporteurEntity parrain;
 
-    @OneToMany(mappedBy = "apporteur")
+    /*@OneToMany(mappedBy = "apporteur")
     @JoinColumn(table = "AFFAIRE", referencedColumnName = "APPORTEUR_ID")
-    private List<AffaireEntity> affaires;
+    private List<AffaireEntity> affaires;*/
 }

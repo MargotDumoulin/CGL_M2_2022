@@ -26,7 +26,7 @@
           </div>
         </c:forEach>
         <input type="submit"  class="btn btn-success" value="Valider les modifications">
-        <input type="submit" class="btn btn-danger" value ="Annuler">
+        <a class="btn btn-danger" href="index.jsp">Annuler</a>
       </form>
     </main>
   </div>
