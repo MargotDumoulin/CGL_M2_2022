@@ -53,16 +53,13 @@ public class ApporteurDAO {
             apporteur.setNom(nom);
             apporteur.setPrenom(prenom);
             apporteur.setParrain(_parrain);
-            //apporteur.setAffaires(new ArrayList<AffaireEntity>());
             session.save(apporteur);
-            System.out.println("saved");
 
             transaction.commit();
 
             return apporteur;
         } catch (Exception e) {
             if (transaction != null) transaction.rollback();
-            System.out.println(e);
             e.printStackTrace();
             throw e;
         } finally {
