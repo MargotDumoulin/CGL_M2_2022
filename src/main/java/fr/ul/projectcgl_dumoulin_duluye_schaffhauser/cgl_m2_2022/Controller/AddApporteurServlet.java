@@ -58,7 +58,8 @@ public class AddApporteurServlet extends HttpServlet {
         }
 
         ApporteurDAO apporteurDAO = new ApporteurDAO();
-        apporteurDAO.insertApporteur(nom, prenom, parrainId);
+        ApporteurEntity parrain = parrainId == -1 ? null :ApporteurDAO.getById((long) parrainId);
+        apporteurDAO.insertApporteur(nom, prenom, parrain);
 
         response.sendRedirect("apporteurs");
     }

@@ -38,21 +38,17 @@ public class ApporteurDAO {
         }
     }
 
-    public static ApporteurEntity insertApporteur(String nom, String prenom, int parrain) {
+    public static ApporteurEntity insertApporteur(String nom, String prenom, ApporteurEntity parrain) {
         Session session = HibernateUtils.getSession();
         Transaction transaction = null;
         ApporteurEntity apporteur = null;
-
-        ApporteurEntity _parrain = null;
-        /*if (parrain != -1)
-            _parrain = ApporteurDAO.getById((long) parrain);*/
 
         try {
             transaction = session.beginTransaction();
             apporteur = new ApporteurEntity();
             apporteur.setNom(nom);
             apporteur.setPrenom(prenom);
-            apporteur.setParrain(_parrain);
+            apporteur.setParrain(parrain);
             session.save(apporteur);
 
             transaction.commit();

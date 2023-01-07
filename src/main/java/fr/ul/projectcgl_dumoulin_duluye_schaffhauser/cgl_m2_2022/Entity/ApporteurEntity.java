@@ -19,11 +19,11 @@ public class ApporteurEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nom;
     private String prenom;
 
     @OneToOne
+    @JoinColumn(name="parrain_id", referencedColumnName = "id")
     private ApporteurEntity parrain;
 
     /*@OneToMany(mappedBy = "apporteur")
