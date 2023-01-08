@@ -26,12 +26,14 @@ public class AffairesServlet extends HttpServlet {
 
         Apporteur app1 = new Apporteur(0L, true, "DUMOULIN", "Margot");
         Apporteur app2 = new Apporteur(1L, true, "DULUYE", "Antony");
+        Apporteur app3 = new Apporteur(2L, true, "SCHAFFHAUSER", "Bastien");
 
         Affaire aff1 = new Affaire(0L, app1, new Date(), 100D);
         Affaire aff2 = new Affaire(1L, app2, new Date(), 100D);
 
         commissionsPerso.add(new CommissionPerso(app1, 95.0));
         commissionsPerso.add(new CommissionPerso(app2, 5.0));
+        commissionsPerso.add(new CommissionPerso(app3, 2.5));
 
         aff1.setCommissions(commissionsPerso);
         aff2.setCommissions(commissionsPerso);
