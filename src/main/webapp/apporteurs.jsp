@@ -58,13 +58,13 @@
                                     </c:choose>
                                 </td>
                                 <td>
-                                    Somme N
+                                    <c:out value="${ apporteur.totalCommissionsMCourant }"/>€
                                 </td>
                                 <td>
-                                    Somme N-1
+                                    <c:out value="${ apporteur.totalCommissionsMM1 }"/>€
                                 </td>
                                 <td>
-                                    Somme N-2
+                                    <c:out value="${ apporteur.totalCommissionsMM2 }"/>€
                                 </td>
                                 <td><a class="btn btn-success" href="affaires?appId=${apporteur.id}"
                                        role="button">Voir</a></td>
