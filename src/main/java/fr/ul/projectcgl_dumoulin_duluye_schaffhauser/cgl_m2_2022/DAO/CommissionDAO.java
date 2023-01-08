@@ -19,8 +19,6 @@ public class CommissionDAO {
                 "AND MONTH(affaire.date) = :month " +
                 "AND YEAR(affaire.date) = :year";
 
-        // String hqlQuery = "SELECT commission.montant FROM Commission AS commission ";
-
         return HibernateUtils.getSession()
                 .createQuery(hqlQuery, Double.class)
                 .setParameter("month", month)

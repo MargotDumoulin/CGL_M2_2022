@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,12 +35,13 @@ public class ApporteursServlet extends HttpServlet {
         Stream<ApporteurEntity> apporteursEntities = apporteurDAO.getAll();
 
         apporteursEntities.forEach(s -> {
-            int month = LocalDate.now().getMonthValue();
-            int year = Year.now().getValue();
+            LocalDate currentDate = LocalDate.now();
+            LocalDate m1Date = LocalDate.from(currentDate).minusMonths(1);
+            LocalDate m2Date = LocalDate.from(currentDate).minusMonths(1);
 
-            Optional<Double> resMM1 = commissionDAO.getTotalByMonthAndApporteurId(month, year, s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
-            Optional<Double> resMM2 = commissionDAO.getTotalByMonthAndApporteurId(month, year,  s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
-            Optional<Double> resMC = commissionDAO.getTotalByMonthAndApporteurId(month, year, s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
+            Optional<Double> resMM1 = commissionDAO.getTotalByMonthAndApporteurId(m1Date.getMonthValue(), m2Date.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
+            Optional<Double> resMM2 = commissionDAO.getTotalByMonthAndApporteurId(m2Date.getMonthValue(), m2Date.getYear(),  s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
+            Optional<Double> resMC = commissionDAO.getTotalByMonthAndApporteurId(currentDate.getMonthValue(), currentDate.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
 
             apporteurs.add(new Apporteur(s.getId(), false, s.getNom(), s.getPrenom(), resMC.orElse(0.0), resMM1.orElse(0.0), resMM2.orElse(0.0)));
         });
