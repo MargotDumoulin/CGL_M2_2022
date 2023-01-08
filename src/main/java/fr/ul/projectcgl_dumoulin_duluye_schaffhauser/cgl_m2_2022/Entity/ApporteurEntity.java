@@ -19,14 +19,13 @@ public class ApporteurEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     private String nom;
     private String prenom;
 
     @OneToOne
+    @JoinColumn(name="parrain_id", referencedColumnName = "id")
     private ApporteurEntity parrain;
 
-    @OneToMany(mappedBy = "apporteur")
-    @JoinColumn(table = "AFFAIRE", referencedColumnName = "APPORTEUR_ID")
-    private List<AffaireEntity> affaires;
+    /* @OneToMany(mappedBy = "apporteur")
+    private List<AffaireEntity> affaires; */
 }

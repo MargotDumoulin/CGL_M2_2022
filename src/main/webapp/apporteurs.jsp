@@ -21,7 +21,9 @@
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
                     <h1 class="h2">Apporteurs d'affaires</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
-                        <button type="button" class="btn btn-sm btn-outline-secondary">Ajouter</button>
+                        <form action="add_apporteur">
+                            <input class="btn btn-sm btn-outline-secondary" type="submit" value="Ajouter">
+                        </form>
                     </div>
                 </div>
                 <div class="table-responsive">
@@ -56,13 +58,13 @@
                                     </c:choose>
                                 </td>
                                 <td>
-                                    Somme N
+                                    <c:out value="${ apporteur.totalCommissionsMCourant }"/>€
                                 </td>
                                 <td>
-                                    Somme N-1
+                                    <c:out value="${ apporteur.totalCommissionsMM1 }"/>€
                                 </td>
                                 <td>
-                                    Somme N-2
+                                    <c:out value="${ apporteur.totalCommissionsMM2 }"/>€
                                 </td>
                                 <td><a class="btn btn-success" href="affaires?appId=${apporteur.id}"
                                        role="button">Voir</a></td>
