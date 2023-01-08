@@ -2,9 +2,12 @@ package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Controller;
 
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Model.Affaire;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Model.Apporteur;
-import jakarta.servlet.*;
-import jakarta.servlet.http.*;
-import jakarta.servlet.annotation.*;
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Model.CommissionPerso;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.*;
@@ -18,14 +21,22 @@ public class AffairesServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Apporteur app1 = new Apporteur(0, true, "DUMOULIN", "Margot");
-        Apporteur app2 = new Apporteur(0, true, "DULUYE", "Antony");
-        Map<Integer, Double> commissionsPerso = new HashMap<Integer, Double>();
-        commissionsPerso.put(0, 95.0);
-        commissionsPerso.put(1, 5.0);
-        Affaire aff1 = new Affaire(0, app1, new Date(), 100, commissionsPerso);
-        Affaire aff2 = new Affaire(1, app2, new Date(), 100, commissionsPerso);
-        List<Affaire> affaires = new ArrayList<Affaire>();
+        List<CommissionPerso> commissionsPerso = new ArrayList<>();
+        List<Affaire> affaires = new ArrayList<>();
+
+        Apporteur app1 = new Apporteur(0L, true, "DUMOULIN", "Margot");
+        Apporteur app2 = new Apporteur(1L, true, "DULUYE", "Antony");
+        Apporteur app3 = new Apporteur(2L, true, "SCHAFFHAUSER", "Bastien");
+
+        Affaire aff1 = new Affaire(0L, app1, new Date(), 100D);
+        Affaire aff2 = new Affaire(1L, app2, new Date(), 100D);
+
+        commissionsPerso.add(new CommissionPerso(app1, 95.0));
+        commissionsPerso.add(new CommissionPerso(app2, 5.0));
+        commissionsPerso.add(new CommissionPerso(app3, 2.5));
+
+        aff1.setCommissions(commissionsPerso);
+        aff2.setCommissions(commissionsPerso);
 
         String appId = request.getParameter("appId");
 
