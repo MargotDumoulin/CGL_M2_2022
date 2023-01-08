@@ -16,9 +16,28 @@ public class Apporteur {
     private String nom;
     private String prenom;
     private Apporteur parrain;
-    private List<CommissionPerso> commissionsMCourant;
-    private List<CommissionPerso> commissionsMMoins1;
-    private List<CommissionPerso> commissionsMMoins2;
+    private Double totalCommissionsMCourant;
+    private Double totalCommissionsMM1;
+    private Double totalCommissionsMM2;
+
+    public Apporteur(
+            Long id,
+            boolean affilie,
+            String nom,
+            String prenom,
+            Double totalCommissionsMCourant,
+            Double totalCommissionsMM1,
+            Double totalCommissionsMM2
+    ) {
+        this.id = id;
+        this.affilie = affilie;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.parrain = null;
+        this.totalCommissionsMCourant = totalCommissionsMCourant;
+        this.totalCommissionsMM1 = totalCommissionsMM1;
+        this.totalCommissionsMM2 = totalCommissionsMM2;
+    }
 
     public Apporteur(Long id, boolean affilie, String nom, String prenom) {
         this.id = id;
@@ -26,8 +45,8 @@ public class Apporteur {
         this.nom = nom;
         this.prenom = prenom;
         this.parrain = null;
-        commissionsMCourant = new ArrayList<>();
-        commissionsMMoins1 = new ArrayList<>();
-        commissionsMMoins2 = new ArrayList<>();
+        this.totalCommissionsMCourant = 0.0;
+        this.totalCommissionsMM1 = 0.0;
+        this.totalCommissionsMM2 = 0.0;
     }
 }

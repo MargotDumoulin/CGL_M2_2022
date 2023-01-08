@@ -1,5 +1,8 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Controller;
 
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.ApporteurDAO;
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.CommissionDAO;
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Model.Apporteur;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -8,8 +11,13 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Stream;
 
 @WebServlet(
         name = "Apporteurs",
@@ -21,12 +29,21 @@ public class ApporteursServlet extends HttpServlet {
             throws ServletException, IOException {
 
         List<Apporteur> apporteurs = new ArrayList<>();
+        ApporteurDAO apporteurDAO = new ApporteurDAO();
+        CommissionDAO commissionDAO = new CommissionDAO();
+        Stream<ApporteurEntity> apporteursEntities = apporteurDAO.getAll();
 
-        Apporteur app1 = new Apporteur(0L, true, "DUMOULIN", "Margot");
-        Apporteur app2 = new Apporteur(1L, false, "DULUYE", "Antony");
+        apporteursEntities.forEach(s -> {
+            int month = LocalDate.now().getMonthValue();
+            int year = Year.now().getValue();
 
-        apporteurs.add(app1);
-        apporteurs.add(app2);
+            Optional<Double> resMM1 = commissionDAO.getTotalByMonthAndApporteurId(month, year, s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
+            Optional<Double> resMM2 = commissionDAO.getTotalByMonthAndApporteurId(month, year,  s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
+            Optional<Double> resMC = commissionDAO.getTotalByMonthAndApporteurId(month, year, s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
+
+            apporteurs.add(new Apporteur(s.getId(), false, s.getNom(), s.getPrenom(), resMC.orElse(0.0), resMM1.orElse(0.0), resMM2.orElse(0.0)));
+        });
+
 
         request.setAttribute("apporteurs", apporteurs);
         request.getRequestDispatcher("/apporteurs.jsp").forward(request, response);

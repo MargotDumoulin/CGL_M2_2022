@@ -12,8 +12,8 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity(name = "CommissionPerso")
-@Table(name = "commission_perso")
+@Entity(name = "Commission")
+@Table(name = "commission")
 public class CommissionEntity {
 
     @EmbeddedId
