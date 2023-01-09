@@ -1,3 +1,4 @@
+<%@ page import="com.fasterxml.jackson.annotation.ObjectIdGenerators" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -20,10 +21,26 @@
       <h1 class="mb-5">Modification des paramètres de l'application</h1>
       <form action="settings" method="post">
         <c:forEach items="${settings}" var="setting" varStatus="status">
+          <%
+            String fieldType = request.getParameter("setting");
+            boolean isInteger = true;
+            if (fieldType == null) {
+              fieldType = "text";
+            }
+            else{
+              try {
+                Integer.parseInt(request.getParameter("setting"));
+              }
+              catch(NumberFormatException e){
+                isInteger = false;
+              }
+            }
+          %>
           <div class="form-floating mb-5">
-            <input type="text" class="form-control" id="${setting.code}" name="${setting.code}" value="${setting.valeur}">
-            <label for="${setting.code}">${setting.label}</label>
+            <input type="<%= isInteger ? "number" : "text"%>" class="form-control" id="${setting.code}" name="${setting.id.toString()}" value="${setting.valeur}">
+            <label for="${setting.code}">${setting.label} : </label>
           </div>
+          <br>
         </c:forEach>
         <input type="submit"  class="btn btn-success" value="Valider les modifications">
         <a class="btn btn-danger" href="index.jsp">Annuler</a>

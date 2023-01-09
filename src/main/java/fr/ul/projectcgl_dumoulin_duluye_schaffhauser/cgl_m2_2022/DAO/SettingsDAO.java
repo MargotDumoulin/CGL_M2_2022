@@ -25,4 +25,17 @@ public class SettingsDAO {
             throw e;
         }
     }
+
+    public static void update(Long id, String value){
+        Session session = HibernateUtils.getSession();
+        Transaction tx = session.beginTransaction();
+
+        SettingEntity settingEntity =  (SettingEntity) session.load(SettingEntity.class, id);
+
+        settingEntity.setValeur(value);
+        session.save(settingEntity);
+
+        tx.commit();
+        session.close();
+    }
 }

@@ -10,8 +10,10 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Enumeration;
 import java.util.List;
-import java.util.stream.Stream;
+
 @WebServlet(name = "SettingsServlet", value = "/settings")
 public class SettingsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
@@ -24,7 +26,16 @@ public class SettingsServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
-        response.sendRedirect("/index.jsp");
+        Enumeration<String> parameterNames = request.getParameterNames();
+
+        while (parameterNames.hasMoreElements()) {
+            String paramName = parameterNames.nextElement();
+            String paramValue = request.getParameter(paramName);
+            SettingsDAO.update(Long.parseLong(paramName), paramValue);
+        }
+
+        String contextPath = request.getContextPath();
+        response.sendRedirect(contextPath + "/apporteurs");
     }
 }
 
