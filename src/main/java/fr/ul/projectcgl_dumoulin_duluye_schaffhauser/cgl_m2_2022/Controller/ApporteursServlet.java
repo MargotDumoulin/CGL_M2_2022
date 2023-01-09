@@ -1,5 +1,6 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Controller;
 
+import com.oracle.wls.shaded.org.apache.xpath.operations.Bool;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.ApporteurDAO;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.CommissionDAO;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
@@ -37,15 +38,15 @@ public class ApporteursServlet extends HttpServlet {
         apporteursEntities.forEach(s -> {
             LocalDate currentDate = LocalDate.now();
             LocalDate m1Date = LocalDate.from(currentDate).minusMonths(1);
-            LocalDate m2Date = LocalDate.from(currentDate).minusMonths(1);
+            LocalDate m2Date = LocalDate.from(currentDate).minusMonths(2);
 
             Optional<Double> resMM1 = commissionDAO.getTotalByMonthAndApporteurId(m1Date.getMonthValue(), m2Date.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
             Optional<Double> resMM2 = commissionDAO.getTotalByMonthAndApporteurId(m2Date.getMonthValue(), m2Date.getYear(),  s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
             Optional<Double> resMC = commissionDAO.getTotalByMonthAndApporteurId(currentDate.getMonthValue(), currentDate.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
+            Boolean isAffilie = apporteurDAO.getIsAffilie(s.getId());
 
-            apporteurs.add(new Apporteur(s.getId(), false, s.getNom(), s.getPrenom(), resMC.orElse(0.0), resMM1.orElse(0.0), resMM2.orElse(0.0)));
+            apporteurs.add(new Apporteur(s.getId(), isAffilie, s.getNom(), s.getPrenom(), resMC.orElse(0.0), resMM1.orElse(0.0), resMM2.orElse(0.0)));
         });
-
 
         request.setAttribute("apporteurs", apporteurs);
         request.getRequestDispatcher("/apporteurs.jsp").forward(request, response);
