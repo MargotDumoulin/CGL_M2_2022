@@ -23,13 +23,8 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
     public boolean deleteApporteur(ApporteurEntity apporteur) {
         try (Session session = super.getSession()) {
             Transaction tx = session.beginTransaction();
-            String query = """
-                    UPDATE Apporteur
-                    SET parrain = null
-                    WHERE parrain.id = :parrainId
-                    """;
             try {
-                session.createQuery(query)
+                session.createQuery("UPDATE Apporteur SET parrain = null WHERE parrain.id = :parrainId", null)
                         .setParameter("parrainId", apporteur.getId())
                         .executeUpdate();
 
