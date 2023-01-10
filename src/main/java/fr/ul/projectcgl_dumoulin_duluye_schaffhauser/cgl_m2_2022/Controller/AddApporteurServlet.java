@@ -1,7 +1,7 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Controller;
+
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.ApporteurDAO;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Model.Apporteur;
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
@@ -10,8 +10,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
-import java.util.*;;
-import java.io.*;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 @WebServlet(name = "Ajouter un apporteur",
@@ -31,14 +30,15 @@ public class AddApporteurServlet extends HttpServlet {
     @Override
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        ApporteurEntity apporteur = new ApporteurEntity();
         String nom = request.getParameter("nom");
         String prenom = request.getParameter("prenom");
 
         request.setAttribute("nom", nom);
         request.setAttribute("prenom", prenom);
 
-        int parrainId = request.getParameter("parrain").equals("") ?
-                -1 : Integer.parseInt(request.getParameter("parrain"));
+        Long parrainId = request.getParameter("parrain").equals("") ?
+                -1 : Long.parseLong(request.getParameter("parrain"));
 
         // Validate the input
         if (nom == null || nom.trim().isEmpty())
@@ -57,9 +57,10 @@ public class AddApporteurServlet extends HttpServlet {
             return;
         }
 
-        ApporteurDAO apporteurDAO = new ApporteurDAO();
-        ApporteurEntity parrain = parrainId == -1 ? null :ApporteurDAO.getById((long) parrainId);
-        apporteurDAO.insertApporteur(nom, prenom, parrain);
+        apporteur.setPrenom(prenom);
+        apporteur.setNom(nom);
+        apporteur.setParrain(Optional.of(parrainId).map(ApporteurDAO::getById).orElse(null));
+        ApporteurDAO.insertApporteur(apporteur);
 
         response.sendRedirect("apporteurs");
     }
