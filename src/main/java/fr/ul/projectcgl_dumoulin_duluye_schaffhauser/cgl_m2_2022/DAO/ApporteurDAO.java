@@ -1,59 +1,27 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO;
 
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
 
-import java.util.Optional;
-import java.util.stream.Stream;
+public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
 
-public class ApporteurDAO {
+    private static ApporteurDAO instance;
 
-    public static Stream<ApporteurEntity> getAll() {
-        return HibernateUtils.getInstance().getSession()
-                .createQuery("from Apporteur ", ApporteurEntity.class)
-                .getResultStream();
-    }
-
-    public static ApporteurEntity getById(Long id) {
-        try (Session session = HibernateUtils.getInstance().getSession()) {
-            return session.get(ApporteurEntity.class, id);
-        } catch (Exception e) {
-            e.printStackTrace();
+    public static ApporteurDAO getInstance() {
+        if (instance == null) {
+            instance = new ApporteurDAO();
         }
 
-        return null;
+        return instance;
     }
 
-    public static boolean isPresentApporteur(Long id) {
-        return Optional.ofNullable(getById(id)).isPresent();
+    private ApporteurDAO() {
+        super(ApporteurEntity.class);
     }
 
-    public static ApporteurEntity insertApporteur(ApporteurEntity apporteur) {
-        try (Session session = HibernateUtils.getInstance().getSession()) {
-            session.save(apporteur);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
-
-        return apporteur;
-    }
-
-    public static ApporteurEntity updateApporteur(ApporteurEntity apporteur) {
-        try (Session session = HibernateUtils.getInstance().getSession()) {
-            session.update(apporteur);
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
-
-        return getById(apporteur.getId());
-    }
-
-    public static boolean deleteApporteur(ApporteurEntity apporteur) {
-        try (Session session = HibernateUtils.getInstance().getSession()) {
+    public boolean deleteApporteur(ApporteurEntity apporteur) {
+        try (Session session = super.getSession()) {
             Transaction tx = session.beginTransaction();
             String query = """
                     UPDATE Apporteur
@@ -65,7 +33,7 @@ public class ApporteurDAO {
                         .setParameter("parrainId", apporteur.getId())
                         .executeUpdate();
 
-                session.delete(apporteur);
+                session.remove(apporteur);
 
                 tx.commit();
             } catch (Exception e) {
@@ -78,6 +46,6 @@ public class ApporteurDAO {
             throw e;
         }
 
-        return isPresentApporteur(apporteur.getId());
+        return isPresent(apporteur.getId());
     }
 }

@@ -14,7 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity(name = "Commission")
 @Table(name = "commission")
-public class CommissionEntity {
+public class CommissionEntity implements IEntity<CommissionEntityId> {
 
     @EmbeddedId
     private CommissionEntityId id;

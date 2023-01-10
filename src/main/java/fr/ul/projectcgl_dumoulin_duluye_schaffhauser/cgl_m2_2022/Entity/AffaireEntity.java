@@ -14,7 +14,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Entity(name = "Affaire")
 @Table(name = "affaire")
-public class AffaireEntity {
+public class AffaireEntity implements IEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

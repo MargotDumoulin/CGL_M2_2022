@@ -10,7 +10,7 @@ import lombok.*;
 @NoArgsConstructor
 @Entity(name = "Apporteur")
 @Table(name = "apporteur")
-public class ApporteurEntity {
+public class ApporteurEntity implements IEntity<Long> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
