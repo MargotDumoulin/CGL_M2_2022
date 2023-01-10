@@ -21,6 +21,14 @@ public class ApporteurDAO {
                 .getResultStream();
     }
 
+    public static Stream<ApporteurEntity> getAll(int pageSize, int start) {
+        return HibernateUtils.getSession()
+                .createQuery("from Apporteur ", ApporteurEntity.class)
+                .setFirstResult(start)
+                .setMaxResults(pageSize)
+                .getResultStream();
+    }
+
     public static ApporteurEntity getById(Long id) {
         Session session = HibernateUtils.getSession();
         Transaction tx = null;

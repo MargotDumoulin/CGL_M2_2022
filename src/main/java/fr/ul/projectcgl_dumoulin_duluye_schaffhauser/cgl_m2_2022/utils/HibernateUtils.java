@@ -14,10 +14,10 @@ public class HibernateUtils {
     public static Session getSession() {
         if (session == null || !session.isOpen()) {
             Properties hibernateProperties = new Properties();
-            hibernateProperties.setProperty("hibernate.connection.url", "jdbc:mariadb://localhost:3307/projet_cgl");
+            hibernateProperties.setProperty("hibernate.connection.url", "jdbc:mariadb://localhost:3306/projet_cgl");
             hibernateProperties.setProperty("dialect", "org.hibernate.dialect.MariaDBDialect");
             hibernateProperties.setProperty("hibernate.connection.username", "root");
-            hibernateProperties.setProperty("hibernate.connection.password", "");
+            hibernateProperties.setProperty("hibernate.connection.password", "toor");
             hibernateProperties.setProperty("hibernate.connection.driver_class", "org.mariadb.jdbc.Driver");
             hibernateProperties.setProperty("connection.pool_size", "1");
             hibernateProperties.setProperty("show_sql", "true");
