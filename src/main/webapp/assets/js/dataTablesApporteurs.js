@@ -9,7 +9,15 @@ $(document).ready(function () {
             { data: 'id' },
             { data: 'nom' },
             { data: 'prenom' },
-            { data: 'affilie' },
+            {
+                data: 'affilie',
+                render: function ( data, type, row ) {
+                    return data
+                        ? '<i class="bi bi-check2"></i>'
+                        : '<i class="bi bi-x-lg"></i>'
+                },
+                width: "50px"
+            },
             { data: 'totalCommissionsMCourant', width: "150px" },
             { data: 'totalCommissionsMM1', width: "150px" },
             { data: 'totalCommissionsMM2', width: "150px" },
