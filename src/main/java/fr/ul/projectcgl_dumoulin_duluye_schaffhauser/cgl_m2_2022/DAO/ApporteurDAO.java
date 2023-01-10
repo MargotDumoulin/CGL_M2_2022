@@ -1,8 +1,6 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO;
 
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
 
@@ -18,29 +16,5 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
 
     private ApporteurDAO() {
         super(ApporteurEntity.class);
-    }
-
-    public boolean deleteApporteur(ApporteurEntity apporteur) {
-        try (Session session = super.getSession()) {
-            Transaction tx = session.beginTransaction();
-            try {
-                session.createQuery("UPDATE Apporteur SET parrain = null WHERE parrain.id = :parrainId", null)
-                        .setParameter("parrainId", apporteur.getId())
-                        .executeUpdate();
-
-                session.remove(apporteur);
-
-                tx.commit();
-            } catch (Exception e) {
-                e.printStackTrace();
-                tx.rollback();
-            }
-        }
-        catch (Exception e) {
-            e.printStackTrace();
-            throw e;
-        }
-
-        return isPresent(apporteur.getId());
     }
 }

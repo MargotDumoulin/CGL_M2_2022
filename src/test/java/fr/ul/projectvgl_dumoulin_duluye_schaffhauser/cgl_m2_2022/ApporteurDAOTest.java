@@ -121,7 +121,7 @@ public class ApporteurDAOTest {
 
         // Suppression de l'apporteur X
 
-        isDeleted = ApporteurDAO.getInstance().deleteApporteur(ApporteurDAO.getInstance().getById(ID_TO_DELETE));
+        isDeleted = ApporteurDAO.getInstance().delete(ApporteurDAO.getInstance().getById(ID_TO_DELETE));
 
         assertThat(isDeleted).isFalse();
         assertThat(ApporteurDAO.getInstance().isPresent(ID_TO_DELETE)).isFalse();
