@@ -33,7 +33,7 @@ public class ApporteursDataServlet extends HttpServlet {
         String draw = request.getParameter("draw");
         int start = Integer.parseInt(request.getParameter("start"));
         int pageSize = Integer.parseInt(request.getParameter("length"));
-        
+
         // Get and initialize apporteurs
         List<Apporteur> apporteurs = new ArrayList<>();
         ApporteurDAO apporteurDAO = new ApporteurDAO();

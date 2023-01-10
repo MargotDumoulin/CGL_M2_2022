@@ -35,43 +35,12 @@
                                 <th scope="col">Nom</th>
                                 <th scope="col">Prénom(s)</th> <!-- TODO: prévoir plusieurs prénoms ? -->
                                 <th scope="col">Affilié</th>
-                                <th scope="col">Somme commission mois N</th>
-                                <th scope="col">Sommes commissions N-1</th>
-                                <th scope="col">Sommes commissions N-2</th>
+                                <th scope="col">Commissions mois N</th>
+                                <th scope="col">Commissions N-1</th>
+                                <th scope="col">Commissions N-2</th>
                                 <th scope="col">Affaires directes</th>
                             </tr>
                         </thead>
-                        <!-- <tbody>
-
-                            <c:forEach items="${apporteurs}" var="apporteur" varStatus="status">
-                                <tr>
-                                    <td><c:out value="${ apporteur.id }"/></td>
-                                    <td><c:out value="${ apporteur.nom }"/></td>
-                                    <td><c:out value="${ apporteur.prenom }"/></td>
-                                    <td>
-                                        <c:choose>
-                                            <c:when test="${apporteur.affilie}">
-                                                Oui
-                                            </c:when>
-                                            <c:otherwise>
-                                                Non
-                                            </c:otherwise>
-                                        </c:choose>
-                                    </td>
-                                    <td>
-                                        <c:out value="${ apporteur.totalCommissionsMCourant }"/>€
-                                    </td>
-                                    <td>
-                                        <c:out value="${ apporteur.totalCommissionsMM1 }"/>€
-                                    </td>
-                                    <td>
-                                        <c:out value="${ apporteur.totalCommissionsMM2 }"/>€
-                                    </td>
-                                    <td><a class="btn btn-success" href="affaires?appId=${apporteur.id}"
-                                           role="button">Voir</a></td>
-                                </tr>
-                            </c:forEach>
-                        </tbody> -->
                     </table>
                 </div>
             </div>
