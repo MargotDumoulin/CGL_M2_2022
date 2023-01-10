@@ -20,7 +20,7 @@ public class AddApporteurServlet extends HttpServlet {
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        Stream<ApporteurEntity> apporteurs = ApporteurDAO.getAll();
+        Stream<ApporteurEntity> apporteurs = ApporteurDAO.getInstance().getAll();
         request.setAttribute("apporteurs", apporteurs.toArray());
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("add_apporteur.jsp");
@@ -50,7 +50,7 @@ public class AddApporteurServlet extends HttpServlet {
                 || request.getAttribute("errorMessagePrenom") != null
                 || request.getAttribute("errorMessageParrain") != null)
         {
-            Stream<ApporteurEntity> apporteurs = ApporteurDAO.getAll();
+            Stream<ApporteurEntity> apporteurs = ApporteurDAO.getInstance().getAll();
             request.setAttribute("apporteurs", apporteurs.toArray());
             RequestDispatcher dispatcher = request.getRequestDispatcher("add_apporteur.jsp");
             dispatcher.forward(request, response);
@@ -59,8 +59,8 @@ public class AddApporteurServlet extends HttpServlet {
 
         apporteur.setPrenom(prenom);
         apporteur.setNom(nom);
-        apporteur.setParrain(Optional.of(parrainId).map(ApporteurDAO::getById).orElse(null));
-        ApporteurDAO.insertApporteur(apporteur);
+        apporteur.setParrain(Optional.of(parrainId).map(ApporteurDAO.getInstance()::getById).orElse(null));
+        ApporteurDAO.getInstance().insert(apporteur);
 
         response.sendRedirect("apporteurs");
     }

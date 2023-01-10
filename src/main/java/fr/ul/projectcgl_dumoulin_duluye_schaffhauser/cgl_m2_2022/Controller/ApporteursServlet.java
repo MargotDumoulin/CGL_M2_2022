@@ -30,9 +30,8 @@ public class ApporteursServlet extends HttpServlet {
             throws ServletException, IOException {
 
         List<Apporteur> apporteurs = new ArrayList<>();
-        ApporteurDAO apporteurDAO = new ApporteurDAO();
         CommissionDAO commissionDAO = new CommissionDAO();
-        Stream<ApporteurEntity> apporteursEntities = apporteurDAO.getAll();
+        Stream<ApporteurEntity> apporteursEntities = ApporteurDAO.getInstance().getAll();
 
         apporteursEntities.forEach(s -> {
             LocalDate currentDate = LocalDate.now();

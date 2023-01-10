@@ -1,10 +1,6 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO;
 
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.CommissionEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.utils.HibernateUtils;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
 
 import java.util.stream.Stream;
 
@@ -19,7 +15,7 @@ public class CommissionDAO {
                 "AND MONTH(affaire.date) = :month " +
                 "AND YEAR(affaire.date) = :year";
 
-        return HibernateUtils.getSession()
+        return HibernateUtils.getInstance().getSession()
                 .createQuery(hqlQuery, Double.class)
                 .setParameter("month", month)
                 .setParameter("year", year)
