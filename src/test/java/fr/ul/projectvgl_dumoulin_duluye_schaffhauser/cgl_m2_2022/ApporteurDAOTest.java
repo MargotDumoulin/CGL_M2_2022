@@ -13,7 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 public class ApporteurDAOTest {
 
     private static final long ID_TO_GET = 3;
-    private static final long PARRAIN_ID = 1;
+    private static final long PARRAIN_ID = 3;
     private static final long ID_TO_UPDATE = 2;
     private static final long ID_TO_DELETE = 4;
     private static final long ID_TO_EXIST_TRUE = 3;
@@ -35,20 +35,28 @@ public class ApporteurDAOTest {
                 (7, 'Tutur', 'TROGNON', 4);
                 """;
 
-        session.createNativeQuery("UPDATE APPORTEUR SET PARRAIN_ID = NULL").executeUpdate();
-        session.createNativeQuery("DELETE FROM APPORTEUR").executeUpdate();
-        session.createNativeQuery(insertQuery).executeUpdate();
+        session.createNativeQuery("UPDATE APPORTEUR SET PARRAIN_ID = NULL", ApporteurEntity.class).executeUpdate();
+        session.createNativeQuery("DELETE FROM APPORTEUR", ApporteurEntity.class).executeUpdate();
+        session.createNativeQuery(insertQuery, ApporteurEntity.class).executeUpdate();
 
         tx.commit();
+    }
+
+    @Test
+    public void getAll() {
+        assertThat(ApporteurDAO.getInstance().getAll())
+                .isNotNull()
+                .isNotEmpty();
     }
 
     @Test
     public void getById() {
         ApporteurEntity apporteur;
 
-        apporteur = ApporteurDAO.getById(ID_TO_GET);
+        apporteur = ApporteurDAO.getInstance().getById(ID_TO_GET);
 
-        assertThat(apporteur).isNotNull()
+        assertThat(apporteur)
+                .isNotNull()
                 .doesNotReturn(null, ApporteurEntity::getId)
                 .returns(ID_TO_GET, ApporteurEntity::getId)
                 .returns("CHAT FAOU ZER", ApporteurEntity::getNom)
@@ -65,21 +73,23 @@ public class ApporteurDAOTest {
 
         apporteurSave = ApporteurEntity.builder()
                 .id(null)
-                .nom("Chalumeau")
+                .nom("CHALUMEAU")
                 .prenom("Timothée")
                 .parrain(null)
                 .build();
 
-        ApporteurDAO.insertApporteur(apporteurSave);
-        apporteurGet = ApporteurDAO.getById(apporteurSave.getId());
+        ApporteurDAO.getInstance().insert(apporteurSave);
+        apporteurGet = ApporteurDAO.getInstance().getById(apporteurSave.getId());
 
-        assertThat(apporteurSave).isNotNull()
+        assertThat(apporteurSave)
+                .isNotNull()
                 .doesNotReturn(null, ApporteurEntity::getId);
 
-        assertThat(apporteurGet).isNotNull()
+        assertThat(apporteurGet)
+                .isNotNull()
                 .doesNotReturn(null, ApporteurEntity::getId)
                 .returns(apporteurSave.getId(), ApporteurEntity::getId)
-                .returns("Chalumeau", ApporteurEntity::getNom)
+                .returns("CHALUMEAU", ApporteurEntity::getNom)
                 .returns("Timothée", ApporteurEntity::getPrenom)
                 .returns(null, ApporteurEntity::getParrain);
     }
@@ -88,19 +98,18 @@ public class ApporteurDAOTest {
     public void updateApporteur() {
         ApporteurEntity apporteur;
 
-        apporteur = ApporteurEntity.builder()
-                .id(ID_TO_UPDATE)
-                .nom("Calumet")
-                .prenom("Bastien")
-                .parrain(ApporteurDAO.getById(PARRAIN_ID))
-                .build();
-        ApporteurDAO.updateApporteur(apporteur);
+        apporteur = ApporteurDAO.getInstance().getById(ID_TO_UPDATE);
+        apporteur.setNom("Calumet");
+        apporteur.setPrenom("Timothée");
+        apporteur.setParrain(ApporteurDAO.getInstance().getById(PARRAIN_ID));
+        ApporteurDAO.getInstance().update(apporteur);
 
-        assertThat(apporteur).isNotNull()
+        assertThat(apporteur)
+                .isNotNull()
                 .doesNotReturn(null, ApporteurEntity::getId)
                 .returns(ID_TO_UPDATE, ApporteurEntity::getId)
                 .returns("Calumet", ApporteurEntity::getNom)
-                .returns("Bastien", ApporteurEntity::getPrenom)
+                .returns("Timothée", ApporteurEntity::getPrenom)
                 .doesNotReturn(null, ApporteurEntity::getParrain)
                 .doesNotReturn(null, e -> e.getParrain().getId())
                 .returns(PARRAIN_ID, e -> e.getParrain().getId());
@@ -112,24 +121,27 @@ public class ApporteurDAOTest {
 
         // Suppression de l'apporteur X
 
-        isDeleted = ApporteurDAO.deleteApporteur(ApporteurDAO.getById(ID_TO_DELETE));
+        isDeleted = ApporteurDAO.getInstance().deleteApporteur(ApporteurDAO.getInstance().getById(ID_TO_DELETE));
 
         assertThat(isDeleted).isFalse();
-        assertThat(ApporteurDAO.isPresentApporteur(ID_TO_DELETE)).isFalse();
+        assertThat(ApporteurDAO.getInstance().isPresent(ID_TO_DELETE)).isFalse();
 
         // Verification que personne n'a X en parrain
 
-        assertThat(ApporteurDAO.getAll()).isNotNull()
+        assertThat(ApporteurDAO.getInstance().getAll())
+                .isNotNull()
                 .noneMatch(e -> e.getParrain() != null && e.getParrain().getId() == ID_TO_DELETE);
     }
 
     @Test
     public void isPresentApporteurTrue() {
-        assertThat(ApporteurDAO.isPresentApporteur(ID_TO_EXIST_TRUE)).isTrue();
+        assertThat(ApporteurDAO.getInstance().isPresent(ID_TO_EXIST_TRUE))
+                .isTrue();
     }
 
     @Test
     public void isPresentApporteurFalse() {
-        assertThat(ApporteurDAO.isPresentApporteur(ID_TO_EXIST_FALSE)).isFalse();
+        assertThat(ApporteurDAO.getInstance().isPresent(ID_TO_EXIST_FALSE))
+                .isFalse();
     }
 }
