@@ -52,7 +52,7 @@
                                 <input type="text" class="form-control is-invalid" id="prenom" name="prenom" value="<%= prenom %>">
                             </c:when>
                             <c:otherwise>
-                                <input type="text" class="form-control" id="prenom" name="prenom" value="<%= nom %>">
+                                <input type="text" class="form-control" id="prenom" name="prenom" value="<%= prenom %>">
                             </c:otherwise>
                         </c:choose>
                         <label for="prenom">Prénom:</label>
