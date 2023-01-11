@@ -38,6 +38,7 @@
                             <th scope="col">Sommes commissions N-1</th>
                             <th scope="col">Sommes commissions N-2</th>
                             <th scope="col">Affaires directes</th>
+                            <th/>
                         </tr>
                         </thead>
                         <tbody>
@@ -68,6 +69,8 @@
                                 </td>
                                 <td><a class="btn btn-success" href="affaires?appId=${apporteur.id}"
                                        role="button">Voir</a></td>
+                                <td><a class="btn btn-success" href="add_apporteur?appId=${apporteur.id}"
+                                       role="button">Modifier</a></td>
                             </tr>
                         </c:forEach>
                         </tbody>
