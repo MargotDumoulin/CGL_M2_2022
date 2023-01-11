@@ -5,7 +5,6 @@ import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.ApporteurDA
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.CommissionDAO;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Model.Apporteur;
-import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
@@ -27,7 +26,7 @@ import java.util.stream.Stream;
 public class ApporteursDataServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-            throws ServletException, IOException {
+            throws IOException {
 
         // Get pagination parameters
         String draw = request.getParameter("draw");
@@ -36,18 +35,17 @@ public class ApporteursDataServlet extends HttpServlet {
 
         // Get and initialize apporteurs
         List<Apporteur> apporteurs = new ArrayList<>();
-        CommissionDAO commissionDAO = new CommissionDAO();
         Stream<ApporteurEntity> apporteursEntities = ApporteurDAO.getInstance().getAll(pageSize, start);
-        Long numberOfResults = ApporteurDAO.getInstance().getAll().count();
+        long numberOfResults = ApporteurDAO.getInstance().count();
 
         apporteursEntities.forEach(s -> {
             LocalDate currentDate = LocalDate.now();
             LocalDate m1Date = LocalDate.from(currentDate).minusMonths(1);
             LocalDate m2Date = LocalDate.from(currentDate).minusMonths(2);
 
-            Optional<Double> resMM1 = commissionDAO.getTotalByMonthAndApporteurId(m1Date.getMonthValue(), m2Date.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
-            Optional<Double> resMM2 = commissionDAO.getTotalByMonthAndApporteurId(m2Date.getMonthValue(), m2Date.getYear(),  s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
-            Optional<Double> resMC = commissionDAO.getTotalByMonthAndApporteurId(currentDate.getMonthValue(), currentDate.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
+            Optional<Double> resMM1 = CommissionDAO.getInstance().getTotalByMonthAndApporteurId(m1Date.getMonthValue(), m1Date.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
+            Optional<Double> resMM2 = CommissionDAO.getInstance().getTotalByMonthAndApporteurId(m2Date.getMonthValue(), m2Date.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
+            Optional<Double> resMC = CommissionDAO.getInstance().getTotalByMonthAndApporteurId(currentDate.getMonthValue(), currentDate.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
             Boolean isAffilie = ApporteurDAO.getInstance().getIsAffilie(s.getId());
 
             apporteurs.add(new Apporteur(s.getId(), isAffilie, s.getNom(), s.getPrenom(), resMC.orElse(0.0), resMM1.orElse(0.0), resMM2.orElse(0.0)));
@@ -57,6 +55,6 @@ public class ApporteursDataServlet extends HttpServlet {
         String jsonApporteurs = new Gson().toJson(apporteurs);
         response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
-        response.getWriter().write("{\"draw\":" + draw + ",\"data\":" + jsonApporteurs +", \"recordsTotal\":" + numberOfResults +",\"recordsFiltered\":" + numberOfResults + "}" );
+        response.getWriter().write("{\"draw\":" + draw + ",\"data\":" + jsonApporteurs + ", \"recordsTotal\":" + numberOfResults + ",\"recordsFiltered\":" + numberOfResults + "}");
     }
 }
