@@ -33,7 +33,7 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function ( data, type, row ) {
-                    return '<a class="btn btn-primary" href="add_apporteur?appId=' + data.id + '" role="button">Voir</a>';
+                    return '<a class="btn btn-primary" href="add_apporteur?appId=' + data.id + '" role="button">Modifier</a>';
                 },
                 width: "50px",
                 orderable: false,
