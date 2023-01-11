@@ -10,6 +10,9 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
 
@@ -19,9 +22,21 @@ public class AddApporteurServlet extends HttpServlet {
     @Override
     public void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
+        request.setAttribute("operation", "Ajouter");
 
         Stream<ApporteurEntity> apporteurs = ApporteurDAO.getInstance().getAll();
         request.setAttribute("apporteurs", apporteurs.toArray());
+
+        String appId = request.getParameter("appId");
+
+        if (appId != null && !Objects.equals(appId, "")) {
+            ApporteurEntity apporteur = ApporteurDAO.getInstance().getById(Long.parseLong(appId));
+            request.setAttribute("appId", appId);
+            request.setAttribute("nom", apporteur.getNom());
+            request.setAttribute("prenom", apporteur.getPrenom());
+            request.setAttribute("apporteurs", Collections.singletonList(apporteur.getParrain()));
+            request.setAttribute("operation", "Modifier");
+        }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher("add_apporteur.jsp");
         dispatcher.forward(request, response);
@@ -31,14 +46,14 @@ public class AddApporteurServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ApporteurEntity apporteur = new ApporteurEntity();
+        String appId = request.getParameter("appId");
         String nom = request.getParameter("nom");
         String prenom = request.getParameter("prenom");
+        Long parrainId = request.getParameter("parrain").equals("") ? -1 : Long.parseLong(request.getParameter("parrain"));
 
         request.setAttribute("nom", nom);
         request.setAttribute("prenom", prenom);
-
-        Long parrainId = request.getParameter("parrain").equals("") ?
-                -1 : Long.parseLong(request.getParameter("parrain"));
+        request.setAttribute("appId", appId);
 
         // Validate the input
         if (nom == null || nom.trim().isEmpty())
@@ -48,8 +63,7 @@ public class AddApporteurServlet extends HttpServlet {
 
         if (request.getAttribute("errorMessageNom") != null
                 || request.getAttribute("errorMessagePrenom") != null
-                || request.getAttribute("errorMessageParrain") != null)
-        {
+                || request.getAttribute("errorMessageParrain") != null) {
             Stream<ApporteurEntity> apporteurs = ApporteurDAO.getInstance().getAll();
             request.setAttribute("apporteurs", apporteurs.toArray());
             RequestDispatcher dispatcher = request.getRequestDispatcher("add_apporteur.jsp");
@@ -57,10 +71,20 @@ public class AddApporteurServlet extends HttpServlet {
             return;
         }
 
+        try {
+            apporteur.setId(Long.parseLong(appId));
+        }
+        catch (Exception ignored) {}
         apporteur.setPrenom(prenom);
         apporteur.setNom(nom);
         apporteur.setParrain(Optional.of(parrainId).map(ApporteurDAO.getInstance()::getById).orElse(null));
-        ApporteurDAO.getInstance().insert(apporteur);
+
+        if (apporteur.getId() == null) {
+            ApporteurDAO.getInstance().insert(apporteur);
+        }
+        else {
+            ApporteurDAO.getInstance().update(apporteur);
+        }
 
         response.sendRedirect("apporteurs");
     }

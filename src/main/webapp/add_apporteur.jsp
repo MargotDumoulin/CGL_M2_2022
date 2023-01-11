@@ -1,9 +1,9 @@
+<%@ page import="java.util.Objects" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <% String nom =  request.getAttribute("nom") == null ? "" : (String) request.getAttribute("nom"); %>
 <% String prenom = request.getAttribute("prenom") == null ? "" : (String) request.getAttribute("prenom"); %>
-
 
 <!DOCTYPE html>
 <html>
@@ -24,7 +24,14 @@
                 <c:if test="${errorMessage != null}">
                     <p style="color: red;">${errorMessage}</p>
                 </c:if>
-                <form action="add_apporteur" method="post">
+                <c:choose>
+                    <c:when test="${operation == 'Modifier'}">
+                        <form action="add_apporteur?appId=${appId}" method="post">
+                    </c:when>
+                    <c:otherwise>
+                        <form action="add_apporteur" method="post">
+                    </c:otherwise>
+                </c:choose>
                     <c:if test="${errorMessageNom.length() > 0}">
                         <div class="alert alert-danger" role="alert">
                             <c:out value="${errorMessageNom}"/>
@@ -52,21 +59,23 @@
                                 <input type="text" class="form-control is-invalid" id="prenom" name="prenom" value="<%= prenom %>">
                             </c:when>
                             <c:otherwise>
-                                <input type="text" class="form-control" id="prenom" name="prenom" value="<%= nom %>">
+                                <input type="text" class="form-control" id="prenom" name="prenom" value="<%= prenom %>">
                             </c:otherwise>
                         </c:choose>
                         <label for="prenom">Prénom:</label>
                     </div>
                     <div class="form-floating mb-5">
                         <select class="form-select" name="parrain" id="parrain" aria-label="Sélectionner le parin">
-                            <option value="" selected>Aucun</option>
+                            <c:if test="${operation != 'Modifier'}">
+                                <option value="" selected>Aucun</option>
+                            </c:if>
                             <c:forEach items="${apporteurs}" var="apporteur" varStatus="status">
                                 <option value="<c:out value="${apporteur.id}"/>"><c:out value="${apporteur.nom}"/> - <c:out value="${apporteur.prenom}"/></option>
                             </c:forEach>
                         </select>
                         <label for="parrain">Parrain (optionnel):</label>
                     </div>
-                    <input type="submit"  class="btn btn-success" value="Ajouter">
+                    <input type="submit"  class="btn btn-success" value="${operation}">
                 </form>
             </main>
         </div>
