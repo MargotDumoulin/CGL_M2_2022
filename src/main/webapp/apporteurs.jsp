@@ -8,6 +8,8 @@
     <link href="assets/style/main.css" rel="stylesheet" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-rbsA2VBKQhggwzxH7pPCaAqO46MgnOM80zW1RWuH61DGLwZJEdK2Kadq2F9CUG65" crossorigin="anonymous">
     <link href="assets/style/dashboard.css" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.1/css/jquery.dataTables.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
 </head>
 <body>
 <jsp:include page="main_header.jsp"/>
@@ -27,53 +29,20 @@
                     </div>
                 </div>
                 <div class="table-responsive">
-                    <table class="table table-striped table-sm">
+                    <table class="table table-striped table-sm display" id="apporteurs-table">
                         <thead>
-                        <tr>
-                            <th scope="col">Id</th>
-                            <th scope="col">Nom</th>
-                            <th scope="col">Prénom(s)</th> <!-- TODO: prévoir plusieurs prénoms ? -->
-                            <th scope="col">Affilié</th>
-                            <th scope="col">Somme commission mois N</th>
-                            <th scope="col">Sommes commissions N-1</th>
-                            <th scope="col">Sommes commissions N-2</th>
-                            <th scope="col">Affaires directes</th>
-                            <th/>
-                        </tr>
-                        </thead>
-                        <tbody>
-                        <!-- TODO: permettre trier chacun des champs -->
-                        <c:forEach items="${apporteurs}" var="apporteur" varStatus="status">
                             <tr>
-                                <td><c:out value="${ apporteur.id }"/></td>
-                                <td><c:out value="${ apporteur.nom }"/></td>
-                                <td><c:out value="${ apporteur.prenom }"/></td>
-                                <td>
-                                    <c:choose>
-                                        <c:when test="${apporteur.affilie}">
-                                            Oui
-                                        </c:when>
-                                        <c:otherwise>
-                                            Non
-                                        </c:otherwise>
-                                    </c:choose>
-                                </td>
-                                <td>
-                                    <c:out value="${ apporteur.totalCommissionsMCourant }"/>€
-                                </td>
-                                <td>
-                                    <c:out value="${ apporteur.totalCommissionsMM1 }"/>€
-                                </td>
-                                <td>
-                                    <c:out value="${ apporteur.totalCommissionsMM2 }"/>€
-                                </td>
-                                <td><a class="btn btn-success" href="affaires?appId=${apporteur.id}"
-                                       role="button">Voir</a></td>
-                                <td><a class="btn btn-success" href="add_apporteur?appId=${apporteur.id}"
-                                       role="button">Modifier</a></td>
+                                <th scope="col">Id</th>
+                                <th scope="col">Nom</th>
+                                <th scope="col">Prénom(s)</th> <!-- TODO: prévoir plusieurs prénoms ? -->
+                                <th scope="col">Affilié</th>
+                                <th scope="col">Commissions mois N</th>
+                                <th scope="col">Commissions N-1</th>
+                                <th scope="col">Commissions N-2</th>
+                                <th scope="col">Affaires directes</th>
+                                <th/>
                             </tr>
-                        </c:forEach>
-                        </tbody>
+                        </thead>
                     </table>
                 </div>
             </div>
@@ -81,8 +50,11 @@
     </div>
 </div>
 
+<script src="http://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js" type="text/javascript"></script>
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.1/js/jquery.dataTables.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/feather-icons@4.28.0/dist/feather.min.js" integrity="sha384-uO3SXW5IuS1ZpFPKugNNWqTZRRglnUJK6UAZ/gxOX80nxEkN9NcGZTftn6RzhGWE" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
+<script src="assets/js/dataTablesApporteurs.js"></script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Controller;
 
-import com.oracle.wls.shaded.org.apache.xpath.operations.Bool;
+import com.google.gson.Gson;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.ApporteurDAO;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.CommissionDAO;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
@@ -13,8 +13,6 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.Year;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,17 +20,26 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 @WebServlet(
-        name = "Apporteurs",
-        urlPatterns = {"/apporteurs"}
+
+        name = "ApporteursData",
+        urlPatterns = {"/apporteurs-data"}
 )
-public class ApporteursServlet extends HttpServlet {
+public class ApporteursDataServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
+        // Get pagination parameters
+        String draw = request.getParameter("draw");
+        int start = Integer.parseInt(request.getParameter("start"));
+        int pageSize = Integer.parseInt(request.getParameter("length"));
+
+        // Get and initialize apporteurs
         List<Apporteur> apporteurs = new ArrayList<>();
+        ApporteurDAO apporteurDAO = new ApporteurDAO();
         CommissionDAO commissionDAO = new CommissionDAO();
-        Stream<ApporteurEntity> apporteursEntities = ApporteurDAO.getInstance().getAll();
+        Stream<ApporteurEntity> apporteursEntities = apporteurDAO.getAll(pageSize, start);
+        Long numberOfResults = apporteurDAO.getAll().count();
 
         apporteursEntities.forEach(s -> {
             LocalDate currentDate = LocalDate.now();
@@ -47,7 +54,10 @@ public class ApporteursServlet extends HttpServlet {
             apporteurs.add(new Apporteur(s.getId(), isAffilie, s.getNom(), s.getPrenom(), resMC.orElse(0.0), resMM1.orElse(0.0), resMM2.orElse(0.0)));
         });
 
-        request.setAttribute("apporteurs", apporteurs);
-        request.getRequestDispatcher("/apporteurs.jsp").forward(request, response);
+        // Send response
+        String jsonApporteurs = new Gson().toJson(apporteurs);
+        response.setContentType("application/json");
+        response.setCharacterEncoding("UTF-8");
+        response.getWriter().write("{\"draw\":" + draw + ",\"data\":" + jsonApporteurs +", \"recordsTotal\":" + numberOfResults +",\"recordsFiltered\":" + numberOfResults + "}" );
     }
 }
