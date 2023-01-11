@@ -36,10 +36,9 @@ public class ApporteursDataServlet extends HttpServlet {
 
         // Get and initialize apporteurs
         List<Apporteur> apporteurs = new ArrayList<>();
-        ApporteurDAO apporteurDAO = new ApporteurDAO();
         CommissionDAO commissionDAO = new CommissionDAO();
-        Stream<ApporteurEntity> apporteursEntities = apporteurDAO.getAll(pageSize, start);
-        Long numberOfResults = apporteurDAO.getAll().count();
+        Stream<ApporteurEntity> apporteursEntities = ApporteurDAO.getInstance().getAll(pageSize, start);
+        Long numberOfResults = ApporteurDAO.getInstance().getAll().count();
 
         apporteursEntities.forEach(s -> {
             LocalDate currentDate = LocalDate.now();
@@ -49,7 +48,7 @@ public class ApporteursDataServlet extends HttpServlet {
             Optional<Double> resMM1 = commissionDAO.getTotalByMonthAndApporteurId(m1Date.getMonthValue(), m2Date.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
             Optional<Double> resMM2 = commissionDAO.getTotalByMonthAndApporteurId(m2Date.getMonthValue(), m2Date.getYear(),  s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
             Optional<Double> resMC = commissionDAO.getTotalByMonthAndApporteurId(currentDate.getMonthValue(), currentDate.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
-            Boolean isAffilie = apporteurDAO.getIsAffilie(s.getId());
+            Boolean isAffilie = ApporteurDAO.getInstance().getIsAffilie(s.getId());
 
             apporteurs.add(new Apporteur(s.getId(), isAffilie, s.getNom(), s.getPrenom(), resMC.orElse(0.0), resMM1.orElse(0.0), resMM2.orElse(0.0)));
         });

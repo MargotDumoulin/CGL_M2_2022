@@ -40,6 +40,14 @@ public abstract class AbstractDAO<E extends IEntity<ID>, ID> {
                 .createQuery(query, entityClass)
                 .getResultStream();
     }
+    public Stream<E> getAll(int pageSize, int start) {
+        String query = "from " + getSession().getMetamodel().entity(entityClass).getName();
+        return getSession()
+                .createQuery(query, entityClass)
+                .setFirstResult(start)
+                .setMaxResults(pageSize)
+                .getResultStream();
+    }
 
     protected E persistEntity(E entity) {
         try (Session session = HibernateUtils.getInstance().getSession()) {

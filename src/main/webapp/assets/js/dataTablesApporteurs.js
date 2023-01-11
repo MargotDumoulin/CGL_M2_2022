@@ -29,6 +29,14 @@ $(document).ready(function () {
                 },
                 width: "50px",
                 orderable: false,
+            },
+            {
+                data: null,
+                render: function ( data, type, row ) {
+                    return '<a class="btn btn-primary" href="add_apporteur?appId=' + data.id + '" role="button">Voir</a>';
+                },
+                width: "50px",
+                orderable: false,
             }
         ],
     });
