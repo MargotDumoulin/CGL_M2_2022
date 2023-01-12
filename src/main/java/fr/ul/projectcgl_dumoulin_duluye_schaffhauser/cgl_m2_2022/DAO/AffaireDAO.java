@@ -20,6 +20,16 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
         super(AffaireEntity.class);
     }
 
+    public Stream<AffaireEntity> getAllByApporteurId(int pageSize, int start, Long apporteurId, String orderBy, String dir) {
+        String query = "SELECT affaire FROM Affaire AS affaire WHERE affaire.apporteur.id = :apporteurId" + " ORDER BY " + orderBy + " " + dir;
+        return getSession()
+                .createQuery(query, AffaireEntity.class)
+                .setParameter("apporteurId", apporteurId)
+                .setFirstResult(start)
+                .setMaxResults(pageSize)
+                .getResultStream();
+    }
+
     public Stream<AffaireEntity> getAllByApporteurId(int pageSize, int start, Long apporteurId) {
         String query = "SELECT affaire FROM Affaire AS affaire WHERE affaire.apporteur.id = :apporteurId";
         return getSession()

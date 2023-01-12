@@ -73,7 +73,6 @@ $(document).ready(function () {
                 render: function ( data, type, row ) {
                     return data.prenom + ' ' + data.nom;
                 },
-                orderable: false,
             },
             {
                 data: 'commissions',

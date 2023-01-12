@@ -37,18 +37,32 @@ public class AffairesDataServlet extends HttpServlet {
         int start = Integer.parseInt(request.getParameter("start"));
         int pageSize = Integer.parseInt(request.getParameter("length"));
 
+        // Get orderable parameters
+        String columns[] = {"","id", "date", "commissionGlobale", "apporteur.nom"};
+        int columnToOrder = Integer.parseInt(request.getParameter("order[0][column]"));
+        String orderDirection = request.getParameter("order[0][dir]");
+
         // Get and initialize affaires
         List<Affaire> affaires = new ArrayList<>();
         Stream<AffaireEntity> affairesEntities;
         String appId = request.getParameter("appId");
         Long numberOfResults;
-        
+
         if (appId != null && appId.matches("-?\\d+(\\.\\d+)?")) {
-            affairesEntities = AffaireDAO.getInstance().getAllByApporteurId(pageSize, start, Long.parseLong(appId));
+            if (columns[columnToOrder].length() > 0) {
+                affairesEntities = AffaireDAO.getInstance().getAllByApporteurId(pageSize, start, Long.parseLong(appId), columns[columnToOrder], orderDirection);
+            } else {
+                affairesEntities = AffaireDAO.getInstance().getAllByApporteurId(pageSize, start, Long.parseLong(appId));
+            }
             numberOfResults = AffaireDAO.getInstance().getAllByApporteurId(Long.parseLong(appId)).count();
         } else {
-            affairesEntities = AffaireDAO.getInstance().getAll(pageSize, start);
-             numberOfResults = AffaireDAO.getInstance().getAll().count();
+            if (columns[columnToOrder].length() > 0) {
+                affairesEntities = AffaireDAO.getInstance().getAll(pageSize, start, columns[columnToOrder], orderDirection);
+            } else {
+                affairesEntities = AffaireDAO.getInstance().getAll(pageSize, start);
+            }
+
+            numberOfResults = AffaireDAO.getInstance().getAll().count();
         }
 
         affairesEntities.forEach(a -> {
