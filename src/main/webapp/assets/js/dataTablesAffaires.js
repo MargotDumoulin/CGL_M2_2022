@@ -9,9 +9,24 @@ function format(d) {
 }
 
 function showParrains (d) {
-    console.log({ d })
-    return '<li>Test</li>'
+    let current = d.apporteur.parrain;
+    let str = '';
+    while (current) {
+        str += '<li>' + current.nom + ' ' + current.prenom + ': ' + getCommissionAmount(current.id, d.commissions) + ' €</li>';
+        current = current.parrain;
+    }
+    return str;
 }
+
+function getCommissionAmount(id, listCom) {
+    for (com of listCom) {
+        if (com.id.apporteur.id === id) {
+            return com.montant;
+        }
+    }
+    return 0;
+}
+
 $(document).ready(function () {
     var dt = $('#affaires-table').DataTable({
         processing: true,
@@ -50,7 +65,7 @@ $(document).ready(function () {
                 data: 'commissions',
                 render: function ( data, type, row ) {
                     for (com of data) {
-                        if (com.id.apporteur.id == 5) {
+                        if (com.id.apporteur.id == row['apporteur']['id']) {
                             return com.montant + ' €';
                         }
                     }

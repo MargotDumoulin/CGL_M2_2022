@@ -41,7 +41,7 @@ public class CommissionDAO {
 
     public Stream<CommissionPerso> getCommissionsByAffaire(Long affaireId) {
         String hqlQuery = """
-                SELECT commission
+                SELECT DISTINCT commission
                 FROM Commission AS commission, Affaire AS affaire
                 WHERE commission.id.affaire.id  = :affaireId
                 """;
