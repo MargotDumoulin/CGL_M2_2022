@@ -8,7 +8,6 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class CommissionPerso {
-
     private Apporteur apporteur;
     private Double montant;
 }

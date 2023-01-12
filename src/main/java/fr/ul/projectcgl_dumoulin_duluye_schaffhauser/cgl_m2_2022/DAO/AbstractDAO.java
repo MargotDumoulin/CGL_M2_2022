@@ -55,6 +55,15 @@ public abstract class AbstractDAO<E extends IEntity<ID>, ID> {
                 .getResultStream();
     }
 
+    public Stream<E> getAll(int pageSize, int start, String orderBy, String dir) {
+        String query = "from " + getSession().getMetamodel().entity(entityClass).getName() + " ORDER BY " + orderBy + " " + dir;
+        return getSession()
+                .createQuery(query, entityClass)
+                .setFirstResult(start)
+                .setMaxResults(pageSize)
+                .getResultStream();
+    }
+
     protected E persistEntity(E entity) {
         try (Session session = HibernateUtils.getInstance().getSession()) {
             Transaction tx = session.beginTransaction();
