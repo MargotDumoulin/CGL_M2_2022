@@ -22,11 +22,11 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
         super(AffaireEntity.class);
     }
 
-    public Stream<AffaireEntity> getAllByApporteurId(int pageSize, int start, Long apporteurId, String orderBy, String dir, Boolean filterByCurrMonth) {
+    public Stream<AffaireEntity> getAllDirByAppId(int pageSize, int start, Long apporteurId, String orderBy, String dir, Boolean filterByCurrMonth) {
         String query = "SELECT affaire FROM Affaire AS affaire WHERE affaire.apporteur.id = :apporteurId";
         if (filterByCurrMonth) query += " AND MONTH(affaire.date) = " + LocalDate.now().getMonthValue();
         query += " ORDER BY " + orderBy + " " + dir;
-        
+
         return getSession()
                 .createQuery(query, AffaireEntity.class)
                 .setParameter("apporteurId", apporteurId)
@@ -35,8 +35,40 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
                 .getResultStream();
     }
 
-    public Stream<AffaireEntity> getAllByApporteurId(Long apporteurId) {
+    public Stream<AffaireEntity> getAllDirByAppId(Long apporteurId) {
         String query = "SELECT affaire FROM Affaire AS affaire WHERE affaire.apporteur.id = :apporteurId";
+        return getSession()
+                .createQuery(query, AffaireEntity.class)
+                .setParameter("apporteurId", apporteurId)
+                .getResultStream();
+    }
+
+    public Stream<AffaireEntity> getAllByAppId(int pageSize, int start, Long apporteurId, String orderBy, String dir, Boolean filterByCurrMonth) {
+        String query = """
+            SELECT affaire 
+            FROM Affaire AS affaire, Commission AS commission 
+            WHERE commission.id.apporteur.id = :apporteurId 
+            AND commission.id.affaire.id = affaire.id
+            """;
+
+        if (filterByCurrMonth) query += " AND MONTH(affaire.date) = " + LocalDate.now().getMonthValue();
+        query += " ORDER BY " + orderBy + " " + dir;
+
+        return getSession()
+                .createQuery(query, AffaireEntity.class)
+                .setParameter("apporteurId", apporteurId)
+                .setFirstResult(start)
+                .setMaxResults(pageSize)
+                .getResultStream();
+    }
+
+    public Stream<AffaireEntity> getAllByAppId(Long apporteurId) {
+        String query = """
+            SELECT affaire 
+            FROM Affaire AS affaire, Commission AS commission 
+            WHERE commission.id.apporteur.id = :apporteurId 
+            AND commission.id.affaire.id = affaire.id
+            """;
         return getSession()
                 .createQuery(query, AffaireEntity.class)
                 .setParameter("apporteurId", apporteurId)

@@ -40,7 +40,7 @@ public class AffairesDataServlet extends HttpServlet {
         Boolean filterByCurrMonth = Boolean.parseBoolean(request.getParameter("filterByMonth"));
 
         // Get orderable parameters
-        String columns[] = {"","id", "date", "commissionGlobale", "apporteur.nom"};
+        String columns[] = {"", "affaire.id", "date", "commissionGlobale", "apporteur.nom"};
         int columnToOrder = Integer.parseInt(request.getParameter("order[0][column]"));
         String orderDirection = request.getParameter("order[0][dir]");
 
@@ -50,15 +50,21 @@ public class AffairesDataServlet extends HttpServlet {
             orderDirection = "asc";
         }
 
+        // Get filter by app params
+        String appId = request.getParameter("appId");
+        String appIdAll = request.getParameter("appIdAll");
+
         // Get and initialize affaires
         List<Affaire> affaires = new ArrayList<>();
         Stream<AffaireEntity> affairesEntities;
-        String appId = request.getParameter("appId");
         Long numberOfResults;
 
         if (appId != null && appId.matches("-?\\d+(\\.\\d+)?")) {
-            affairesEntities = AffaireDAO.getInstance().getAllByApporteurId(pageSize, start, Long.parseLong(appId), columns[columnToOrder], orderDirection, filterByCurrMonth);
-            numberOfResults = AffaireDAO.getInstance().getAllByApporteurId(Long.parseLong(appId)).count();
+            affairesEntities = AffaireDAO.getInstance().getAllDirByAppId(pageSize, start, Long.parseLong(appId), columns[columnToOrder], orderDirection, filterByCurrMonth);
+            numberOfResults = AffaireDAO.getInstance().getAllDirByAppId(Long.parseLong(appId)).count();
+        } else if (appIdAll != null && appIdAll.matches("-?\\d+(\\.\\d+)?")) {
+            affairesEntities = AffaireDAO.getInstance().getAllByAppId(pageSize, start, Long.parseLong(appIdAll), columns[columnToOrder], orderDirection, filterByCurrMonth);
+            numberOfResults = AffaireDAO.getInstance().getAllByAppId(Long.parseLong(appIdAll)).count();
         } else {
             affairesEntities = AffaireDAO.getInstance().getAll(pageSize, start, columns[columnToOrder], orderDirection, filterByCurrMonth);
             numberOfResults = AffaireDAO.getInstance().getAll().count();
