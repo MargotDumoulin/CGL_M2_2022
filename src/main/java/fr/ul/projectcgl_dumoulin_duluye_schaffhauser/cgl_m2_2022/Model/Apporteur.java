@@ -25,6 +25,23 @@ public class Apporteur {
             boolean affilie,
             String nom,
             String prenom,
+            Apporteur parrain
+    ) {
+        this.id = id;
+        this.affilie = affilie;
+        this.nom = nom;
+        this.prenom = prenom;
+        this.parrain = parrain;
+        this.totalCommissionsMCourant = 0.0;
+        this.totalCommissionsMM1 = 0.0;
+        this.totalCommissionsMM2 = 0.0;
+    }
+
+    public Apporteur(
+            Long id,
+            boolean affilie,
+            String nom,
+            String prenom,
             Double totalCommissionsMCourant,
             Double totalCommissionsMM1,
             Double totalCommissionsMM2

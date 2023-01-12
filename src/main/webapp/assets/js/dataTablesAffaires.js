@@ -1,11 +1,31 @@
+/* Formatting function for row details - modify as you need */
+function format(d) {
+    return (
+        'Liste des parrains et de leurs commissions associées :' +
+        '<ul>' +
+            showParrains(d) +
+        '</u>'
+    );
+}
+
+function showParrains (d) {
+    console.log({ d })
+    return '<li>Test</li>'
+}
 $(document).ready(function () {
-    $('#affaires-table').DataTable({
+    var dt = $('#affaires-table').DataTable({
         processing: true,
         serverSide: true,
         searching: false,
         autoWidth: false,
         ajax: '/CGL_M2_2022_war/affaires-data',
         columns: [
+            {
+                className: 'dt-control',
+                orderable: false,
+                data: null,
+                defaultContent: '',
+            },
             { data: 'id' },
             {
                 data: 'date',
@@ -13,7 +33,12 @@ $(document).ready(function () {
                     return new Date(data).toLocaleDateString();
                 }
             },
-            { data: 'commissionGlobale', width: "150px" },
+            {
+                data: 'commissionGlobale',
+                render: function ( data, type, row ) {
+                    return data + ' €';
+                },
+                width: "150px" },
             {
                 data: 'apporteur',
                 render: function ( data, type, row ) {
@@ -24,8 +49,12 @@ $(document).ready(function () {
             {
                 data: 'commissions',
                 render: function ( data, type, row ) {
-                    console.log({ data })
-                    return;
+                    for (com of data) {
+                        if (com.id.apporteur.id == 5) {
+                            return com.montant + ' €';
+                        }
+                    }
+                    return 0 + ' €';
                 },
                 width: "50px",
                 orderable: false,
@@ -42,4 +71,38 @@ $(document).ready(function () {
             },
         ],
     });
+
+    // Array to track the ids of the details displayed rows
+    var detailRows = [];
+
+    $('#affaires-table tbody').on('click', 'tr td.dt-control', function () {
+        var tr = $(this).closest('tr');
+        var row = dt.row(tr);
+        var idx = detailRows.indexOf(tr.attr('id'));
+
+        if (row.child.isShown()) {
+            tr.removeClass('details');
+            row.child.hide();
+
+            // Remove from the 'open' array
+            detailRows.splice(idx, 1);
+        } else {
+            tr.addClass('details');
+            row.child(format(row.data())).show();
+
+            // Add to the 'open' array
+            if (idx === -1) {
+                detailRows.push(tr.attr('id'));
+            }
+        }
+    });
+
+    // On each draw, loop over the `detailRows` array and show any child rows
+    dt.on('draw', function () {
+        detailRows.forEach(function(id, i) {
+            $('#' + id + ' td.details-control').trigger('click');
+        });
+    });
 });
+
+
