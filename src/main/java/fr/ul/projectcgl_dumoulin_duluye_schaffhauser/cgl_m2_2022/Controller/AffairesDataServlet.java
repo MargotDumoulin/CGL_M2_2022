@@ -22,9 +22,8 @@ import java.util.List;
 import java.util.stream.Stream;
 
 @WebServlet(
-
-        name = "AffairesData",
-        urlPatterns = {"/affaires-data"}
+    name = "AffairesData",
+    urlPatterns = {"/affaires-data"}
 )
 public class AffairesDataServlet extends HttpServlet {
 
@@ -37,10 +36,19 @@ public class AffairesDataServlet extends HttpServlet {
         int start = Integer.parseInt(request.getParameter("start"));
         int pageSize = Integer.parseInt(request.getParameter("length"));
 
+        // Get filter by month parameter
+        Boolean filterByCurrMonth = Boolean.parseBoolean(request.getParameter("filterByMonth"));
+
         // Get orderable parameters
         String columns[] = {"","id", "date", "commissionGlobale", "apporteur.nom"};
         int columnToOrder = Integer.parseInt(request.getParameter("order[0][column]"));
         String orderDirection = request.getParameter("order[0][dir]");
+
+        // Sort by id desc by default
+        if (columns[columnToOrder].length() == 0) {
+            columnToOrder = 1;
+            orderDirection = "asc";
+        }
 
         // Get and initialize affaires
         List<Affaire> affaires = new ArrayList<>();
@@ -49,19 +57,10 @@ public class AffairesDataServlet extends HttpServlet {
         Long numberOfResults;
 
         if (appId != null && appId.matches("-?\\d+(\\.\\d+)?")) {
-            if (columns[columnToOrder].length() > 0) {
-                affairesEntities = AffaireDAO.getInstance().getAllByApporteurId(pageSize, start, Long.parseLong(appId), columns[columnToOrder], orderDirection);
-            } else {
-                affairesEntities = AffaireDAO.getInstance().getAllByApporteurId(pageSize, start, Long.parseLong(appId));
-            }
+            affairesEntities = AffaireDAO.getInstance().getAllByApporteurId(pageSize, start, Long.parseLong(appId), columns[columnToOrder], orderDirection, filterByCurrMonth);
             numberOfResults = AffaireDAO.getInstance().getAllByApporteurId(Long.parseLong(appId)).count();
         } else {
-            if (columns[columnToOrder].length() > 0) {
-                affairesEntities = AffaireDAO.getInstance().getAll(pageSize, start, columns[columnToOrder], orderDirection);
-            } else {
-                affairesEntities = AffaireDAO.getInstance().getAll(pageSize, start);
-            }
-
+            affairesEntities = AffaireDAO.getInstance().getAll(pageSize, start, columns[columnToOrder], orderDirection, filterByCurrMonth);
             numberOfResults = AffaireDAO.getInstance().getAll().count();
         }
 

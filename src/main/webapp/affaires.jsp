@@ -26,6 +26,12 @@
                         <button type="button" class="btn btn-sm btn-outline-secondary">Ajouter</button>
                     </div>
                 </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="affaires-filter-checkbox-month">
+                    <label class="form-check-label" for="affaires-filter-checkbox-month">
+                        Voir uniquement les affaires du mois courant
+                    </label>
+                </div>
                 <div class="table-responsive">
                     <table class="table display" id="affaires-table">
                         <thead>
@@ -53,5 +59,6 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
 <script src="assets/js/customTableButton.js"></script>
 <script src="assets/js/dataTablesAffaires.js"></script>
+<script src="assets/js/manageCheckboxMonthFilter.js"></script>
 </body>
 </html>
