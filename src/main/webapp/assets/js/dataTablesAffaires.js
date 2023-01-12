@@ -8,6 +8,12 @@ function format(d) {
     );
 }
 
+function getURLParams (param) {
+    const url_string = window.location.href;
+    const url = new URL(url_string);
+    return url.searchParams.get(param);
+}
+
 function showParrains (d) {
     let current = d.apporteur.parrain;
     let str = '';
@@ -27,13 +33,21 @@ function getCommissionAmount(id, listCom) {
     return 0;
 }
 
+function addOptionalParameters() {
+    const appIdParam = getURLParams("appId")
+    if (appIdParam) {
+        return "?appId=" + appIdParam;
+    }
+    return '';
+}
+
 $(document).ready(function () {
     var dt = $('#affaires-table').DataTable({
         processing: true,
         serverSide: true,
         searching: false,
         autoWidth: false,
-        ajax: '/CGL_M2_2022_war/affaires-data',
+        ajax: '/CGL_M2_2022_war/affaires-data' + addOptionalParameters(),
         columns: [
             {
                 className: 'dt-control',

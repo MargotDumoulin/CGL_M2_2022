@@ -39,8 +39,17 @@ public class AffairesDataServlet extends HttpServlet {
 
         // Get and initialize affaires
         List<Affaire> affaires = new ArrayList<>();
-        Stream<AffaireEntity> affairesEntities = AffaireDAO.getInstance().getAll(pageSize, start);
-        Long numberOfResults = AffaireDAO.getInstance().getAll().count();
+        Stream<AffaireEntity> affairesEntities;
+        String appId = request.getParameter("appId");
+        Long numberOfResults;
+        
+        if (appId != null && appId.matches("-?\\d+(\\.\\d+)?")) {
+            affairesEntities = AffaireDAO.getInstance().getAllByApporteurId(pageSize, start, Long.parseLong(appId));
+            numberOfResults = AffaireDAO.getInstance().getAllByApporteurId(Long.parseLong(appId)).count();
+        } else {
+            affairesEntities = AffaireDAO.getInstance().getAll(pageSize, start);
+             numberOfResults = AffaireDAO.getInstance().getAll().count();
+        }
 
         affairesEntities.forEach(a -> {
             ApporteurEntity appEnt = a.getApporteur();
