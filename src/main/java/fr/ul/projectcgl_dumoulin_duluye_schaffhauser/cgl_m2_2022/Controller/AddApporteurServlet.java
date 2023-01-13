@@ -45,14 +45,21 @@ public class AddApporteurServlet extends HttpServlet {
     public void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         ApporteurEntity apporteur = new ApporteurEntity();
+
         String appId = request.getParameter("appId");
+
+        if (appId != null && !Objects.equals(appId, ""))
+            request.setAttribute("operation", "Modifier");
+        else
+            request.setAttribute("operation", "Ajouter");
+
         String nom = request.getParameter("nom");
         String prenom = request.getParameter("prenom");
         Long parrainId = request.getParameter("parrain").equals("") ? -1 : Long.parseLong(request.getParameter("parrain"));
 
+        request.setAttribute("appId", appId);
         request.setAttribute("nom", nom);
         request.setAttribute("prenom", prenom);
-        request.setAttribute("appId", appId);
 
         // Validate the input
         if (nom == null || nom.trim().isEmpty())
