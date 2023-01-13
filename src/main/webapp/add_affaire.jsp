@@ -2,8 +2,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<% String nom =  request.getAttribute("nom") == null ? "" : (String) request.getAttribute("nom"); %>
-<% String prenom = request.getAttribute("prenom") == null ? "" : (String) request.getAttribute("prenom"); %>
+<% String montant =  request.getAttribute("montant") == null ? "" : (String) request.getAttribute("montant"); %>
+<% String date = request.getAttribute("date") == null ? "" : (String) request.getAttribute("date"); %>
 
 <!DOCTYPE html>
 <html>
@@ -21,30 +21,38 @@
                 <jsp:include page="main_nav.jsp"/>
                 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
                     <h1 class="mb-5">Ajouter une affaire</h1>
+
                     <c:if test="${errorMessage != null}">
                         <p style="color: red;">${errorMessage}</p>
                     </c:if>
-                    <form action="add_apporteur${operation == 'Modifier' ? '?appId=${appId}' : ''}" method="post">
-                        <c:if test="${errorMessageNom.length() > 0}">
+
+                    <form action="add_affaire${operation == 'Modifier' ? '?affId=${affId}' : ''}" method="post">
+
+                        <!-- DATE -->
+                        <c:if test="${errorMessageDate.length() > 0}">
                             <div class="alert alert-danger" role="alert">
-                                <c:out value="${errorMessageNom}"/>
+                                <c:out value="${errorMessageDate}"/>
                             </div>
                         </c:if>
                         <div class="form-floating mb-5">
-                            <input type="text" class="form-control ${errorMessageNom.length() > 0 ? 'is-invalid' : ''}" id="nom" name="nom" value="<%= nom %>">
-                            <label for="nom">Nom:</label>
+                            <input type="date" class="form-control ${errorMessageDate.length() > 0 ? 'is-invalid' : ''}" id="date" name="date" value="<%= date %>">
+                            <label for="date">Date:</label>
                         </div>
-                        <c:if test="${errorMessagePrenom.length() > 0}">
+
+                        <!-- MONTANT -->
+                        <c:if test="${errorMessageMontant.length() > 0}">
                             <div class="alert alert-danger" role="alert">
-                                <c:out value="${errorMessagePrenom}"/>
+                                <c:out value="${errorMessageMontant}"/>
                             </div>
                         </c:if>
                         <div class="form-floating mb-5">
-                            <input type="text" class="form-control ${errorMessageNom.length() > 0 ? 'is-invalid' : ''}" id="prenom" name="prenom" value="<%= prenom %>">
-                            <label for="prenom">Prénom:</label>
+                            <input type="number" class="form-control ${errorMessageMontant.length() > 0 ? 'is-invalid' : ''}" id="montant" name="montant" value="<%= montant %>">
+                            <label for="montant">Montant:</label>
                         </div>
+
+                        <!-- APPORTEUR -->
                         <div class="form-floating mb-5">
-                            <select class="form-select" name="parrain" id="parrain" aria-label="Sélectionner le parin">
+                            <select class="form-select" name="apporteur" id="apporteur">
                                 <c:if test="${operation != 'Modifier'}">
                                     <option value="" selected>Aucun</option>
                                 </c:if>
@@ -52,8 +60,9 @@
                                     <option value="<c:out value="${apporteur.id}"/>"><c:out value="${apporteur.nom}"/> - <c:out value="${apporteur.prenom}"/></option>
                                 </c:forEach>
                             </select>
-                            <label for="parrain">Parrain (optionnel):</label>
+                            <label for="apporteur">Apporteur d'affaire :</label>
                         </div>
+
                         <input type="submit"  class="btn btn-success" value="${operation}">
                     </form>
                 </main>
