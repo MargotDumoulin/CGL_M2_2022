@@ -40,7 +40,8 @@
                                 <th scope="col">Commissions N-1</th>
                                 <th scope="col">Commissions N-2</th>
                                 <th scope="col">Affaires directes</th>
-                                <th/>
+                                <th scope="col">Toutes les affaires</th>
+                                <th scope="col">Actions</th>
                             </tr>
                         </thead>
                     </table>

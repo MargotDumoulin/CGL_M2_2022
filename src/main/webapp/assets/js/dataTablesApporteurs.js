@@ -8,7 +8,10 @@ $(document).ready(function () {
         columns: [
             { data: 'id' },
             { data: 'nom' },
-            { data: 'prenom' },
+            {
+                data: 'prenom',
+                width: '200px',
+            },
             {
                 data: 'affilie',
                 render: function ( data, type, row ) {
@@ -28,6 +31,14 @@ $(document).ready(function () {
                     return '<a class="btn btn-success" href="affaires?appId=' + data.id + '" role="button">Voir</a>';
                 },
                 width: "50px",
+                orderable: false,
+            },
+            {
+                data: null,
+                render: function ( data, type, row ) {
+                    return '<a class="btn btn-success" href="affaires?appIdAll=' + data.id + '" role="button">Voir</a>';
+                },
+                width: "80px",
                 orderable: false,
             },
             {

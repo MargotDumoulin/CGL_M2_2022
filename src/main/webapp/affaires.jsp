@@ -21,10 +21,18 @@
         <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
             <div>
                 <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
-                    <h1 class="h2">Affaires</h1>
+                    <h1 class="h2" id="affaires-title">Affaires</h1>
                     <div class="btn-toolbar mb-2 mb-md-0">
-                        <button type="button" class="btn btn-sm btn-outline-secondary">Ajouter</button>
+                        <form action="add_affaire">
+                            <input class="btn btn-sm btn-outline-secondary" type="submit" value="Ajouter">
+                        </form>
                     </div>
+                </div>
+                <div class="form-check">
+                    <input class="form-check-input" type="checkbox" value="" id="affaires-filter-checkbox-month">
+                    <label class="form-check-label" for="affaires-filter-checkbox-month">
+                        Voir uniquement les affaires du mois courant
+                    </label>
                 </div>
                 <div class="table-responsive">
                     <table class="table display" id="affaires-table">
@@ -53,5 +61,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.4/dist/Chart.min.js" integrity="sha384-zNy6FEbO50N+Cg5wap8IKA4M/ZnLJgzc6w2NqACZaK0u0FXfOWRRJOnQtpZun8ha" crossorigin="anonymous"></script>
 <script src="assets/js/customTableButton.js"></script>
 <script src="assets/js/dataTablesAffaires.js"></script>
+<script src="assets/js/manageCheckboxMonthFilter.js"></script>
+<script src="assets/js/affairesTitle.js"></script>
 </body>
 </html>

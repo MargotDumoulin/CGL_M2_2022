@@ -8,12 +8,6 @@ function format(d) {
     );
 }
 
-function getURLParams (param) {
-    const url_string = window.location.href;
-    const url = new URL(url_string);
-    return url.searchParams.get(param);
-}
-
 function showParrains (d) {
     let current = d.apporteur.parrain;
     let str = '';
@@ -34,11 +28,9 @@ function getCommissionAmount(id, listCom) {
 }
 
 function addOptionalParameters() {
-    const appIdParam = getURLParams("appId")
-    if (appIdParam) {
-        return "?appId=" + appIdParam;
-    }
-    return '';
+    const currUrl = window.location.href;
+    const params = currUrl.split('?')[1];
+    return params ? ('?' + params) : '';
 }
 
 $(document).ready(function () {
