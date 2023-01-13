@@ -36,12 +36,13 @@ public class AddAffaireServlet extends HttpServlet {
 
         String affId = request.getParameter("affId");
 
-        if (affId != null && !Objects.equals(affId, "")) {
+        if (affId != null && affId.matches("-?\\d+(\\.\\d+)?")) {
             AffaireEntity affaire = AffaireDAO.getInstance().getById(Long.parseLong(affId));
             request.setAttribute("affId", affId);
             request.setAttribute("montant", affaire.getCommissionGlobale());
             request.setAttribute("date", affaire.getDate());
             request.setAttribute("apporteurs", Collections.singletonList(affaire.getApporteur()));
+            System.out.println("on passe ICI DONC EN MODIFIER !!");
             request.setAttribute("operation", "Modifier");
         }
 
@@ -63,15 +64,22 @@ public class AddAffaireServlet extends HttpServlet {
             request.setAttribute("date", date);
             request.setAttribute("affId", affId);
 
+
+            if (affId != null) request.setAttribute("operation", "Modifier");
+            else request.setAttribute("operation", "Ajouter");
+
             // Validate the input
             if (montant == null)
                 request.setAttribute("errorMessageMontant", "Le montant est obligatoire");
             if (date == null)
                 request.setAttribute("errorMessageDate", "La date est obligatoire");
+            if (apporteurId == -1)
+                request.setAttribute("errorMessageApporteur", "Le champ apporteur est obligatoire");
 
             if (request.getAttribute("errorMessageMontant") != null
                     || request.getAttribute("errorMessageDate") != null
                     || request.getAttribute("errorMessageApporteur") != null) {
+
                 Stream<ApporteurEntity> apporteurs = ApporteurDAO.getInstance().getAll();
                 request.setAttribute("apporteurs", apporteurs.toArray());
                 RequestDispatcher dispatcher = request.getRequestDispatcher("add_affaire.jsp");
