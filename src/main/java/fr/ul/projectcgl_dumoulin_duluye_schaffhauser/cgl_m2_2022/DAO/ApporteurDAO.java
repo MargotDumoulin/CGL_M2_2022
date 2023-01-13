@@ -36,10 +36,10 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                 LEFT JOIN (SELECT t_commission.*
                            FROM commission t_commission
                            LEFT JOIN affaire AS t_affaire ON t_commission.AFFAIRE_ID = t_affaire.ID
-                           WHERE YEAR(t_affaire.DATE) = :month
-                             AND MONTH(t_affaire.DATE) = :year) AS c ON c.APPORTEUR_ID = t_apporteur.ID
+                           WHERE YEAR(t_affaire.DATE) = :year
+                             AND MONTH(t_affaire.DATE) = :month) AS c ON c.APPORTEUR_ID = t_apporteur.ID
                 GROUP BY t_apporteur.id
-                ORDER BY COALESCE(SUM(c.MONTANT), 0) ASC
+                ORDER BY COALESCE(SUM(c.MONTANT), 0) DESC
                 """;
 
         return getSession()
