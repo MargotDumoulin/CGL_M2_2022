@@ -16,6 +16,7 @@ public class ApporteurDAOTest {
     private static final long PARRAIN_ID = 3;
     private static final long ID_TO_UPDATE = 2;
     private static final long ID_TO_DELETE = 4;
+    private static final long ID_TO_DELETE_2 = 7;
     private static final long ID_TO_EXIST_TRUE = 3;
     private static final long ID_TO_EXIST_FALSE = 0;
 
@@ -116,7 +117,7 @@ public class ApporteurDAOTest {
     }
 
     @Test
-    public void deleteApporteur() {
+    public void deleteApporteurByEntity() {
         boolean isDeleted;
 
         // Suppression de l'apporteur X
@@ -131,6 +132,23 @@ public class ApporteurDAOTest {
         assertThat(ApporteurDAO.getInstance().getAll())
                 .isNotNull()
                 .noneMatch(e -> e.getParrain() != null && e.getParrain().getId() == ID_TO_DELETE);
+    }
+    @Test
+    public void deleteApporteurById() {
+        boolean isDeleted;
+
+        // Suppression de l'apporteur X
+
+        isDeleted = ApporteurDAO.getInstance().delete(ID_TO_DELETE_2);
+
+        assertThat(isDeleted).isFalse();
+        assertThat(ApporteurDAO.getInstance().isPresent(ID_TO_DELETE_2)).isFalse();
+
+        // Verification que personne n'a X en parrain
+
+        assertThat(ApporteurDAO.getInstance().getAll())
+                .isNotNull()
+                .noneMatch(e -> e.getParrain() != null && e.getParrain().getId() == ID_TO_DELETE_2);
     }
 
     @Test

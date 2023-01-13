@@ -14,7 +14,7 @@ $(document).ready(function () {
             },
             {
                 data: 'affilie',
-                render: function ( data, type, row ) {
+                render: function ( data ) {
                     return data
                         ? '<i class="bi bi-check2"></i>'
                         : '<i class="bi bi-x-lg"></i>'
@@ -27,7 +27,7 @@ $(document).ready(function () {
             { data: 'totalCommissionsMM2', width: "150px" },
             {
                 data: null,
-                render: function ( data, type, row ) {
+                render: function ( data ) {
                     return '<a class="btn btn-success" href="affaires?appId=' + data.id + '" role="button">Voir</a>';
                 },
                 width: "50px",
@@ -35,7 +35,7 @@ $(document).ready(function () {
             },
             {
                 data: null,
-                render: function ( data, type, row ) {
+                render: function ( data ) {
                     return '<a class="btn btn-success" href="affaires?appIdAll=' + data.id + '" role="button">Voir</a>';
                 },
                 width: "80px",
@@ -43,8 +43,9 @@ $(document).ready(function () {
             },
             {
                 data: null,
-                render: function ( data, type, row ) {
-                    return '<a class="btn btn-primary" href="add_apporteur?appId=' + data.id + '" role="button">Modifier</a>';
+                render: function ( data ) {
+                    return '<a class="btn btn-primary" href="add_apporteur?appId=' + data.id + '" role="button"><i class="bi bi-pencil"/></a>' +
+                           '<a class="btn btn-danger" href="delete_apporteur?appId=' + data.id + '" role="button"><i class="bi bi-trash3"/></a>';
                 },
                 width: "50px",
                 orderable: false,
