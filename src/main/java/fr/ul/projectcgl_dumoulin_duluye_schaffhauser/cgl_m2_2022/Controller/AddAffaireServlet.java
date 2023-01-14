@@ -42,7 +42,6 @@ public class AddAffaireServlet extends HttpServlet {
             request.setAttribute("montant", affaire.getCommissionGlobale());
             request.setAttribute("date", affaire.getDate());
             request.setAttribute("apporteurs", Collections.singletonList(affaire.getApporteur()));
-            System.out.println("on passe ICI DONC EN MODIFIER !!");
             request.setAttribute("operation", "Modifier");
         }
 
@@ -91,15 +90,11 @@ public class AddAffaireServlet extends HttpServlet {
             affaire.setApporteur(ApporteurDAO.getInstance().getById(apporteurId));
             affaire.setCommissionGlobale(montant);
 
-            if (affaire.getId() == null) {
-                AffaireDAO.getInstance().insert(affaire);
-            } else {
-                AffaireDAO.getInstance().update(affaire);
-            }
+            AffaireDAO.getInstance().insertOrUpdate(affaire, affId != null);
 
             response.sendRedirect("affaires");
         } catch (ParseException error) {
-            System.out.println("il y a ERREEUUUR");
+            System.out.println("il y a ERREEUUUR"); // TODO: Afficher une Servlet d'erreur
         }
 
     }

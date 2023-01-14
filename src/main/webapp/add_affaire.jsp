@@ -32,7 +32,7 @@
                         <p style="color: red;">${errorMessage}</p>
                     </c:if>
 
-                    <form action="add_affaire${operation == 'Modifier' ? '?affId=${affId}' : ''}" method="post">
+                    <form action="add_affaire${operation == 'Modifier' ? '?affId='.concat(affId) : ''}" method="post">
 
                         <!-- DATE -->
                         <c:if test="${errorMessageDate.length() > 0}">

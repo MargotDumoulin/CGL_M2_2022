@@ -27,13 +27,18 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
         super(AffaireEntity.class);
     }
 
-    public AffaireEntity insert(AffaireEntity affaire) {
+    public AffaireEntity insertOrUpdate(AffaireEntity affaire, Boolean isUpdate) {
         Session session = HibernateUtils.getInstance().getSession();
         Transaction transaction = null;
 
         try {
             transaction = session.beginTransaction();
-            session.persist(affaire);
+            if (isUpdate) {
+                session.merge(affaire);
+            } else {
+                session.persist(affaire);
+            }
+
             this.insertCommissions(affaire, session);
             transaction.commit();
         } catch (Exception e) {
@@ -72,7 +77,7 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
     public void insertCommission(AffaireEntity affaire, ApporteurEntity apporteur, Session session, Double montant) {
         CommissionEntityId comEntId = new CommissionEntityId(affaire, apporteur);
         CommissionEntity com = new CommissionEntity(comEntId, montant);
-        session.persist(com);
+        session.merge(com);
     }
 
 
