@@ -39,7 +39,7 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
                 session.persist(affaire);
             }
 
-            this.insertCommissions(affaire, session);
+            CommissionDAO.getInstance().insertCommissions(affaire, session);
             transaction.commit();
         } catch (Exception e) {
             if (transaction != null) {
@@ -52,39 +52,6 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
 
         return affaire;
     }
-
-    public void insertCommissions(AffaireEntity affaire, Session session) {
-        Double globalCom = affaire.getCommissionGlobale();
-        Double totalComParrain = 0.0;
-        ApporteurEntity parr = affaire.getApporteur().getParrain();
-
-        if (parr != null) {
-            // Insert commission for first parrain
-            Double parrainCom = ApporteurDAO.getInstance().getIsAffilie(parr.getId()) ? globalCom * 0.05 : 0;
-            totalComParrain += parrainCom;
-            this.insertCommission(affaire, parr, session, parrainCom);
-
-            // Insert commissions pour les parrains d'après...
-            parr = parr.getParrain();
-            while (parr != null) {
-                parrainCom = ApporteurDAO.getInstance().getIsAffilie(parr.getId()) ? parrainCom * 0.5 : 0; // PRENDRE POURCENTAGE DEPUIS PARAMS
-                totalComParrain += parrainCom;
-                this.insertCommission(affaire, parr, session, parrainCom);
-
-                parr = parr.getParrain();
-            }
-        }
-
-        // Insert commission for apporteur
-        this.insertCommission(affaire, affaire.getApporteur(), session, globalCom - totalComParrain); // PRENDRE POURCENTAGE DEPUIS PARAMS
-    }
-
-    public void insertCommission(AffaireEntity affaire, ApporteurEntity apporteur, Session session, Double montant) {
-        CommissionEntityId comEntId = new CommissionEntityId(affaire, apporteur);
-        CommissionEntity com = new CommissionEntity(comEntId, montant);
-        session.merge(com);
-    }
-
 
     public Stream<AffaireEntity> getAllDirByAppId(int pageSize, int start, Long apporteurId, String orderBy, String dir, Boolean filterByCurrMonth) {
         String query = "SELECT affaire FROM Affaire AS affaire WHERE affaire.apporteur.id = :apporteurId";
