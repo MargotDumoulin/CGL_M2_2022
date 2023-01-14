@@ -3,6 +3,7 @@ package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.utils;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.AffaireEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.CommissionEntity;
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.SettingEntity;
 import org.hibernate.Session;
 import org.hibernate.cfg.Configuration;
 
@@ -66,6 +67,7 @@ public class HibernateUtils {
                     .addAnnotatedClass(ApporteurEntity.class)
                     .addAnnotatedClass(AffaireEntity.class)
                     .addAnnotatedClass(CommissionEntity.class)
+                    .addAnnotatedClass(SettingEntity.class)
                     .buildSessionFactory()
                     .openSession();
         }
