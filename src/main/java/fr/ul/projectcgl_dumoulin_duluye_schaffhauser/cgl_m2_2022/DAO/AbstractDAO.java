@@ -118,4 +118,7 @@ public abstract class AbstractDAO<E extends IEntity<ID>, ID> {
 
         return isPresent(entity.getId());
     }
+    public boolean delete(ID id) {
+        return delete(getById(id));
+    }
 }
