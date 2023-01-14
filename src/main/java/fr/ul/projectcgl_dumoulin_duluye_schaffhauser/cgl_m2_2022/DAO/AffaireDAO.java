@@ -54,24 +54,29 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
     }
 
     public void insertCommissions(AffaireEntity affaire, Session session) {
-        // Insert commission for apporteur
         Double globalCom = affaire.getCommissionGlobale();
-        this.insertCommission(affaire, affaire.getApporteur(), session, globalCom - (globalCom * 0.05)); // PRENDRE POURCENTAGE DEPUIS PARAMS
-
-        // Insert commission for first parrain
+        Double totalComParrain = 0.0;
         ApporteurEntity parr = affaire.getApporteur().getParrain();
-        Double parrainCom = globalCom * 0.05;
-        this.insertCommission(affaire, parr, session, parrainCom);
 
-        // Insert commissions pour les parrains d'après...
-        parr = parr.getParrain();
-        parrainCom = parrainCom / 2; // PRENDRE POURCENTAGE DEPUIS PARAMS
-
-        while (parr != null) {
+        if (parr != null) {
+            // Insert commission for first parrain
+            Double parrainCom = ApporteurDAO.getInstance().getIsAffilie(parr.getId()) ? globalCom * 0.05 : 0;
+            totalComParrain += parrainCom;
             this.insertCommission(affaire, parr, session, parrainCom);
+
+            // Insert commissions pour les parrains d'après...
             parr = parr.getParrain();
-            parrainCom = parrainCom / 2;
+            while (parr != null) {
+                parrainCom = ApporteurDAO.getInstance().getIsAffilie(parr.getId()) ? parrainCom * 0.5 : 0; // PRENDRE POURCENTAGE DEPUIS PARAMS
+                totalComParrain += parrainCom;
+                this.insertCommission(affaire, parr, session, parrainCom);
+
+                parr = parr.getParrain();
+            }
         }
+
+        // Insert commission for apporteur
+        this.insertCommission(affaire, affaire.getApporteur(), session, globalCom - totalComParrain); // PRENDRE POURCENTAGE DEPUIS PARAMS
     }
 
     public void insertCommission(AffaireEntity affaire, ApporteurEntity apporteur, Session session, Double montant) {
