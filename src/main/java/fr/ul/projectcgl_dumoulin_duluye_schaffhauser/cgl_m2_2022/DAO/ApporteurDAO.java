@@ -26,21 +26,26 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
     }
 
     public Boolean getIsAffilie(Long apporteurId) {
-        LocalDate compDate = LocalDate.from(LocalDate.now()).minusMonths(3);
+        Long durationSetting = Long.parseLong(SettingsDAO.getInstance().getByCode("DUREE_MIN_AFFILIE").getValeur());
+        System.out.println(durationSetting);
+        Long minAffairesSetting = Long.parseLong(SettingsDAO.getInstance().getByCode("NB_MIN_AFFAIRES").getValeur());
+        System.out.println(minAffairesSetting);
+        LocalDate compDate = LocalDate.from(LocalDate.now()).minusMonths(durationSetting);
         String hqlQuery = "" +
-                "SELECT apporteur.nom " +
+                "SELECT COUNT(apporteur) " +
                 "FROM Apporteur AS apporteur, Affaire AS affaire " +
                 "WHERE apporteur.id = affaire.apporteur.id " +
                 "AND apporteur.id = :apporteurId " +
                 "AND affaire.date >= :comparativeDate";
 
-        Stream<String> resStream = super.getSession()
-                .createQuery(hqlQuery, String.class)
+        Long nbOfAffaires = getSession()
+                .createQuery(hqlQuery, Long.class)
                 .setParameter("apporteurId", apporteurId)
                 .setParameter("comparativeDate", Date.from(compDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
-                .getResultStream();
+                .getSingleResult();
 
+        System.out.println(nbOfAffaires);
 
-        return resStream.map(Optional::ofNullable).findFirst().flatMap(Function.identity()).isPresent();
+        return nbOfAffaires >= minAffairesSetting;
     }
 }
