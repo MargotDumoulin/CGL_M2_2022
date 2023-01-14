@@ -13,13 +13,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.stream.Stream;
 
 @WebServlet(name = "SettingsServlet", value = "/settings")
 public class SettingsServlet extends HttpServlet {
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
 
-        List<SettingEntity> settings = SettingsDAO.getAll();
+        List<SettingEntity> settings = SettingsDAO.getInstance().getAll().toList();
         request.setAttribute("settings", settings);
         request.getRequestDispatcher("/settings.jsp").forward(request, response);
     }
@@ -31,7 +32,7 @@ public class SettingsServlet extends HttpServlet {
         while (parameterNames.hasMoreElements()) {
             String paramName = parameterNames.nextElement();
             String paramValue = request.getParameter(paramName);
-            SettingsDAO.update(Long.parseLong(paramName), paramValue);
+            SettingsDAO.getInstance().update(Long.parseLong(paramName), paramValue);
         }
 
         String contextPath = request.getContextPath();
