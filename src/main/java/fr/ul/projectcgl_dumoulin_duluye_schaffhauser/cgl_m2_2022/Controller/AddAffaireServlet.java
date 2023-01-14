@@ -64,7 +64,6 @@ public class AddAffaireServlet extends HttpServlet {
             request.setAttribute("date", date);
             request.setAttribute("affId", affId);
 
-
             if (affId != null) request.setAttribute("operation", "Modifier");
             else request.setAttribute("operation", "Ajouter");
 
