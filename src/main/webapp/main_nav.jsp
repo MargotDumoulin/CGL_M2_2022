@@ -22,6 +22,12 @@
               Apporteurs d'affaires
             </a>
           </li>
+          <li class="nav-item">
+            <a class="nav-link" href="settings">
+              <span data-feather="file" class="align-text-bottom"></span>
+              Paramètres
+            </a>
+          </li>
         </ul>
       </div>
     </nav>

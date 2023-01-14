@@ -3,6 +3,11 @@ package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO;
 import com.oracle.wls.shaded.org.apache.xpath.operations.Bool;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.AffaireEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.CommissionEntity;
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.CommissionEntityId;
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.utils.HibernateUtils;
+import org.hibernate.Session;
+import org.hibernate.Transaction;
 
 import java.time.LocalDate;
 import java.util.stream.Stream;
@@ -20,6 +25,32 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
 
     private AffaireDAO() {
         super(AffaireEntity.class);
+    }
+
+    public AffaireEntity insertOrUpdate(AffaireEntity affaire, Boolean isUpdate) {
+        Session session = HibernateUtils.getInstance().getSession();
+        Transaction transaction = null;
+
+        try {
+            transaction = session.beginTransaction();
+            if (isUpdate) {
+                session.merge(affaire);
+            } else {
+                session.persist(affaire);
+            }
+
+            CommissionDAO.getInstance().insertCommissions(affaire, session);
+            transaction.commit();
+        } catch (Exception e) {
+            if (transaction != null) {
+                transaction.rollback();
+                throw e;
+            }
+        }  finally {
+            session.close();
+        }
+
+        return affaire;
     }
 
     public Stream<AffaireEntity> getAllDirByAppId(int pageSize, int start, Long apporteurId, String orderBy, String dir, Boolean filterByCurrMonth) {
