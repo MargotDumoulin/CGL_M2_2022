@@ -12,7 +12,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Entity(name = "Setting")
 @Table(name = "parametres")
-public class SettingEntity {
+public class SettingEntity implements IEntity<Long> {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)

@@ -1,7 +1,7 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO;
 
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.SettingEntity;
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Model.Setting;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -9,25 +9,24 @@ import org.hibernate.Transaction;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class SettingsDAO {
-    public static List<SettingEntity> getAll(){
-        Transaction transaction = null;
-        try {
-            Session session = HibernateUtils.getSession();
-            transaction = session.beginTransaction();
-            List<SettingEntity> settings = session.createQuery("FROM Setting ", SettingEntity.class).list();
-            transaction.commit();
-            return settings;
-        } catch (Exception e) {
-            if (transaction != null) {
-                transaction.rollback();
-            }
-            throw e;
+public class SettingsDAO extends AbstractDAO<SettingEntity, Long> {
+
+    private static SettingsDAO instance;
+
+    public static SettingsDAO getInstance() {
+        if (instance == null) {
+            instance = new SettingsDAO();
         }
+
+        return instance;
     }
 
-    public static void update(Long id, String value){
-        Session session = HibernateUtils.getSession();
+    private SettingsDAO() {
+        super(SettingEntity.class);
+    }
+
+    public void update(Long id, String value){
+        Session session = getSession();
         Transaction tx = session.beginTransaction();
 
         SettingEntity settingEntity =  (SettingEntity) session.load(SettingEntity.class, id);
