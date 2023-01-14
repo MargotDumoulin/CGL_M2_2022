@@ -53,10 +53,9 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
 
     public Boolean getIsAffilie(Long apporteurId) {
         Long durationSetting = Long.parseLong(SettingsDAO.getInstance().getByCode("DUREE_MIN_AFFILIE").getValeur());
-        System.out.println(durationSetting);
         Long minAffairesSetting = Long.parseLong(SettingsDAO.getInstance().getByCode("NB_MIN_AFFAIRES").getValeur());
-        System.out.println(minAffairesSetting);
         LocalDate compDate = LocalDate.from(LocalDate.now()).minusMonths(durationSetting);
+
         String hqlQuery = "" +
                 "SELECT COUNT(apporteur) " +
                 "FROM Apporteur AS apporteur, Affaire AS affaire " +
@@ -69,9 +68,7 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                 .setParameter("apporteurId", apporteurId)
                 .setParameter("comparativeDate", Date.from(compDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
                 .getSingleResult();
-
-        System.out.println(nbOfAffaires);
-
+        
         return nbOfAffaires >= minAffairesSetting;
     }
 }
