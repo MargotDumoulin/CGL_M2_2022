@@ -83,8 +83,8 @@ $(document).ready(function () {
                 data: null,
                 render: function ( data, type, row ) {
                     // Change routes :)
-                    return '<a class="btn btn-primary" href="add_affaire?appId=' + data.id + '" role="button">Modifier</a>' +
-                        '<a class="btn btn-danger" href="add_affaire?appId=' + data.id + '" role="button" style="margin-left: 2px">Supprimer</a>';
+                    return '<a class="btn btn-primary" href="add_affaire?affId=' + data.id + '" role="button">Modifier</a>' +
+                        '<a class="btn btn-danger" href="delete_affaire?affId=' + data.id + '" role="button" style="margin-left: 2px">Supprimer</a>';
                 },
                 width: "220px",
                 orderable: false,

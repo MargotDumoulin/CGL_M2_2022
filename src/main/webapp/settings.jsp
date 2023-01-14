@@ -18,7 +18,9 @@
     <jsp:include page="main_nav.jsp" />
 
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
-      <h1 class="mb-5">Modification des paramètres de l'application</h1>
+      <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">
+        <h1 class="h2" id="affaires-title">Modification des paramètres de l'application</h1>
+      </div>
       <form action="settings" method="post">
         <c:forEach items="${settings}" var="setting" varStatus="status">
           <%
@@ -36,7 +38,7 @@
               }
             }
           %>
-          <div class="form-floating mb-5">
+          <div class="form-floating mb-2">
             <input type="<%= isInteger ? "number" : "text"%>" class="form-control" id="${setting.code}" name="${setting.id.toString()}" value="${setting.valeur}">
             <label for="${setting.code}">${setting.label} : </label>
           </div>
