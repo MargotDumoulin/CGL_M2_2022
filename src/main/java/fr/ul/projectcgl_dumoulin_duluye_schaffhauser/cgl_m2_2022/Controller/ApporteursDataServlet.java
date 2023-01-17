@@ -33,9 +33,20 @@ public class ApporteursDataServlet extends HttpServlet {
         int start = Integer.parseInt(request.getParameter("start"));
         int pageSize = Integer.parseInt(request.getParameter("length"));
 
+        // Get orderable parameters
+        String columns[] = {"id", "nom", "prenom", "affilie", "totalCommissionsMCourant", "totalCommissionsMM1", "totalCommissionsMM2"};
+        int columnToOrder = Integer.parseInt(request.getParameter("order[0][column]"));
+        String orderDirection = request.getParameter("order[0][dir]");
+
+        // Sort by id desc by default
+        if (columns[columnToOrder].length() == 0) {
+            columnToOrder = 1;
+            orderDirection = "asc";
+        }
+
         // Get and initialize apporteurs
         List<Apporteur> apporteurs = new ArrayList<>();
-        Stream<ApporteurEntity> apporteursEntities = ApporteurDAO.getInstance().getAll(pageSize, start);
+        Stream<ApporteurEntity> apporteursEntities = ApporteurDAO.getInstance().getAll(pageSize, start, columns[columnToOrder], orderDirection);
         long numberOfResults = ApporteurDAO.getInstance().getAll().count();
 
         apporteursEntities.forEach(s -> {

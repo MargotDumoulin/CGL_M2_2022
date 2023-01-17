@@ -1,6 +1,7 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO;
 
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
+import jakarta.ejb.Local;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
@@ -25,10 +26,13 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
         super(ApporteurEntity.class);
     }
 
-    public Stream<ApporteurEntity> getAll(int pageSize, int start) {
-        LocalDate currentDate = LocalDate.now();
-        LocalDate m1Date = LocalDate.from(currentDate).minusMonths(1);
-        LocalDate m2Date = LocalDate.from(currentDate).minusMonths(2);
+    public Stream<ApporteurEntity> getAll(int pageSize, int start, String orderBy, String dir) {
+        String orderByFormatted = orderBy;
+        LocalDate dateToFilterWith = this.getLocalDateForOrderBy(orderBy);
+
+        if (orderBy.contains("total")) {
+            orderByFormatted = " COALESCE(SUM(c.MONTANT), 0) ";
+        }
 
         String sqlQuery = """
                 SELECT t_apporteur.*
@@ -38,17 +42,27 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                            LEFT JOIN affaire AS t_affaire ON t_commission.AFFAIRE_ID = t_affaire.ID
                            WHERE YEAR(t_affaire.DATE) = :year
                              AND MONTH(t_affaire.DATE) = :month) AS c ON c.APPORTEUR_ID = t_apporteur.ID
-                GROUP BY t_apporteur.id
-                ORDER BY COALESCE(SUM(c.MONTANT), 0) DESC
+                GROUP BY t_apporteur.id 
                 """;
+        sqlQuery += " ORDER BY " + orderByFormatted + " " + dir;
 
         return getSession()
                 .createNativeQuery(sqlQuery, ApporteurEntity.class)
                 .setFirstResult(start)
                 .setMaxResults(pageSize)
-                .setParameter("month", currentDate.getMonthValue())
-                .setParameter("year", currentDate.getYear())
+                .setParameter("month", dateToFilterWith.getMonthValue())
+                .setParameter("year", dateToFilterWith.getYear())
                 .getResultStream();
+    }
+
+    public LocalDate getLocalDateForOrderBy (String orderBy) {
+        LocalDate currentDate = LocalDate.now();
+
+        switch (orderBy) {
+            case "totalCommissionsMM1": return LocalDate.from(currentDate).minusMonths(1);
+            case "totalCommissionsMM2": return LocalDate.from(currentDate).minusMonths(2);
+            default: return currentDate;
+        }
     }
 
     public Boolean getIsAffilie(Long apporteurId) {
