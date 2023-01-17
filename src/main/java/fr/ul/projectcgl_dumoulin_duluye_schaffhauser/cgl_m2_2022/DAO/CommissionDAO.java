@@ -67,7 +67,7 @@ public class CommissionDAO {
                   AND commission.id.apporteur.id = :apporteurId
                   AND MONTH(affaire.date) = :month
                   AND YEAR(affaire.date) = :year
-                  """;
+                """;
 
         return HibernateUtils.getInstance().getSession()
                 .createQuery(hqlQuery, Double.class)

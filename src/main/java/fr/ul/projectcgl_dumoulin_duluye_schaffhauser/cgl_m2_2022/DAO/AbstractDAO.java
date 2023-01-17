@@ -34,12 +34,6 @@ public abstract class AbstractDAO<E extends IEntity<ID>, ID> {
         return Optional.ofNullable(getById(id)).isPresent();
     }
 
-    public int count() {
-        String query = "SELECT COUNT(*) FROM " + getSession().getMetamodel().entity(entityClass).getName();
-        return getSession()
-                .createQuery(query, Integer.class)
-                .getSingleResult();
-    }
     public Stream<E> getAll() {
         String query = "from " + getSession().getMetamodel().entity(entityClass).getName();
         return getSession()
