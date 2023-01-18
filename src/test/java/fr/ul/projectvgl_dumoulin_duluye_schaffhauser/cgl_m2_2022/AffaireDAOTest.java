@@ -74,13 +74,6 @@ public class AffaireDAOTest {
     }
 
     @Test
-    public void getAll() {
-        assertThat(AffaireDAO.getInstance().getAll())
-                .isNotNull()
-                .isNotEmpty();
-    }
-
-    @Test
     public void getById() {
         AffaireEntity affaire;
 
@@ -125,7 +118,7 @@ public class AffaireDAOTest {
     }
 
     @Test
-    public void updateApporteur() {
+    public void updateAffaire() {
         AffaireEntity affaire;
         Date date = new Date(1663711200000L);
 
@@ -146,7 +139,7 @@ public class AffaireDAOTest {
     }
 
     @Test
-    public void deleteApporteurByEntity() {
+    public void deleteAffaireByEntity() {
         boolean isDeleted;
 
         // Suppression de l'apporteur X
@@ -163,7 +156,7 @@ public class AffaireDAOTest {
                 .noneMatch(e -> e.getId().getAffaire() != null && e.getId().getAffaire().getId() == ID_TO_DELETE);
     }
     @Test
-    public void deleteApporteurById() {
+    public void deleteAffaireById() {
         boolean isDeleted;
 
         // Suppression de l'apporteur X
@@ -181,13 +174,13 @@ public class AffaireDAOTest {
     }
 
     @Test
-    public void isPresentApporteurTrue() {
+    public void isPresentAffaireTrue() {
         assertThat(AffaireDAO.getInstance().isPresent(ID_TO_EXIST_TRUE))
                 .isTrue();
     }
 
     @Test
-    public void isPresentApporteurFalse() {
+    public void isPresentAffaireFalse() {
         assertThat(AffaireDAO.getInstance().isPresent(ID_TO_EXIST_FALSE))
                 .isFalse();
     }

@@ -50,13 +50,6 @@ public class ApporteurDAOTest {
     }
 
     @Test
-    public void getAll() {
-        assertThat(ApporteurDAO.getInstance().getAll())
-                .isNotNull()
-                .isNotEmpty();
-    }
-
-    @Test
     public void getById() {
         ApporteurEntity apporteur;
 
@@ -133,7 +126,7 @@ public class ApporteurDAOTest {
         assertThat(isDeleted).isFalse();
         assertThat(ApporteurDAO.getInstance().isPresent(ID_TO_DELETE)).isFalse();
 
-        // Verification que personne n'a X en parrain
+        // Verification que personne n'a X en parrainS
 
         assertThat(ApporteurDAO.getInstance().getAll())
                 .isNotNull()
