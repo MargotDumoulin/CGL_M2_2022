@@ -1,7 +1,9 @@
 package fr.ul.projectvgl_dumoulin_duluye_schaffhauser.cgl_m2_2022;
 
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.ApporteurDAO;
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.AffaireEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.CommissionEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -36,8 +38,12 @@ public class ApporteurDAOTest {
                 (7, 'Tutur', 'TROGNON', 4);
                 """;
 
+
+        session.createNativeQuery("DELETE FROM COMMISSION", CommissionEntity.class).executeUpdate();
+        session.createNativeQuery("DELETE FROM AFFAIRE", AffaireEntity.class).executeUpdate();
         session.createNativeQuery("UPDATE APPORTEUR SET PARRAIN_ID = NULL", ApporteurEntity.class).executeUpdate();
         session.createNativeQuery("DELETE FROM APPORTEUR", ApporteurEntity.class).executeUpdate();
+
         session.createNativeQuery(insertQuery, ApporteurEntity.class).executeUpdate();
 
         tx.commit();

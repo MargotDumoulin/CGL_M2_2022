@@ -56,19 +56,19 @@ $(document).ready(function () {
             },
             {
                 data: 'commissionGlobale',
-                render: function ( data, type, row ) {
+                render: function ( data ) {
                     return data + ' €';
                 },
                 width: "150px" },
             {
                 data: 'apporteur',
-                render: function ( data, type, row ) {
+                render: function ( data ) {
                     return data.prenom + ' ' + data.nom;
                 },
             },
             {
                 data: 'commissions',
-                render: function ( data, type, row ) {
+                render: function ( data ) {
                     for (com of data) {
                         if (com.id.apporteur.id == row['apporteur']['id']) {
                             return com.montant + ' €';
@@ -81,10 +81,9 @@ $(document).ready(function () {
             },
             {
                 data: null,
-                render: function ( data, type, row ) {
-                    // Change routes :)
-                    return '<a class="btn btn-primary" href="add_affaire?affId=' + data.id + '" role="button">Modifier</a>' +
-                        '<a class="btn btn-danger" href="delete_affaire?affId=' + data.id + '" role="button" style="margin-left: 2px">Supprimer</a>';
+                render: function ( data ) {
+                    return '<a class="btn btn-primary" href="add_affaire?affId=' + data.id + '" role="button"><i class="bi bi-pencil"/></a>' +
+                           '<a class="btn btn-danger" href="delete_affaire?affId=' + data.id + '" role="button"><i class="bi bi-trash3"/></a>';
                 },
                 width: "220px",
                 orderable: false,

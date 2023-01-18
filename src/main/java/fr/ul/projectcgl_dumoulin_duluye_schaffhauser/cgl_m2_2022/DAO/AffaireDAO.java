@@ -1,10 +1,6 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO;
 
-import com.oracle.wls.shaded.org.apache.xpath.operations.Bool;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.AffaireEntity;
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.CommissionEntity;
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.CommissionEntityId;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -46,7 +42,7 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
                 transaction.rollback();
                 throw e;
             }
-        }  finally {
+        } finally {
             session.close();
         }
 
@@ -76,11 +72,11 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
 
     public Stream<AffaireEntity> getAllByAppId(int pageSize, int start, Long apporteurId, String orderBy, String dir, Boolean filterByCurrMonth) {
         String query = """
-            SELECT affaire 
-            FROM Affaire AS affaire, Commission AS commission 
-            WHERE commission.id.apporteur.id = :apporteurId 
-            AND commission.id.affaire.id = affaire.id
-            """;
+                SELECT affaire 
+                FROM Affaire AS affaire, Commission AS commission 
+                WHERE commission.id.apporteur.id = :apporteurId 
+                AND commission.id.affaire.id = affaire.id
+                """;
 
         if (filterByCurrMonth) query += " AND MONTH(affaire.date) = " + LocalDate.now().getMonthValue();
         query += " ORDER BY " + orderBy + " " + dir;
@@ -95,11 +91,11 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
 
     public Stream<AffaireEntity> getAllByAppId(Long apporteurId) {
         String query = """
-            SELECT affaire 
-            FROM Affaire AS affaire, Commission AS commission 
-            WHERE commission.id.apporteur.id = :apporteurId 
-            AND commission.id.affaire.id = affaire.id
-            """;
+                SELECT affaire 
+                FROM Affaire AS affaire, Commission AS commission 
+                WHERE commission.id.apporteur.id = :apporteurId 
+                AND commission.id.affaire.id = affaire.id
+                """;
         return getSession()
                 .createQuery(query, AffaireEntity.class)
                 .setParameter("apporteurId", apporteurId)
@@ -118,5 +114,37 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
                 .getResultStream();
     }
 
+    @Override
+    public boolean delete(AffaireEntity entity) {
+        String query = """
+                DELETE FROM Commission
+                WHERE id.affaire.id = :affaireId
+                """;
 
+        try (Session session = getSession()) {
+            Transaction tx = session.beginTransaction();
+
+            try {
+                session.createQuery(query, null)
+                        .setParameter("affaireId", entity.getId())
+                        .executeUpdate();
+
+                session.remove(entity);
+
+                tx.commit();
+            } catch (Exception e) {
+                tx.rollback();
+                throw e;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+/*            throw e;*/
+        }
+
+        return isPresent(entity.getId());
+    }
+    @Override
+    public boolean delete(Long id) {
+        return delete(getById(id));
+    }
 }
