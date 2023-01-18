@@ -25,6 +25,13 @@ public class CommissionDAO {
     private CommissionDAO() {
     }
 
+    public Stream<CommissionEntity> getAll() {
+        String query = "from Commission ";
+        return HibernateUtils.getInstance().getSession()
+                .createQuery(query, CommissionEntity.class)
+                .getResultStream();
+    }
+
     public void insertCommissions(AffaireEntity affaire, Session session) {
         Double globalCom = affaire.getCommissionGlobale();
         Double totalComParrain = 0.0;
