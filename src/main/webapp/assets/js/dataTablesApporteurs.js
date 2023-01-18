@@ -44,8 +44,8 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function ( data ) {
-                    return '<a class="btn btn-primary" href="add_apporteur?appId=' + data.id + '" role="button"><i class="bi bi-pencil"/></a>' +
-                           '<a class="btn btn-danger" href="delete_apporteur?appId=' + data.id + '" role="button"><i class="bi bi-trash3"/></a>';
+                    return '<div><a class="btn btn-primary" href="add_apporteur?appId=' + data.id + '" role="button"><i class="bi bi-pencil"></i></a></div>' +
+                           '<div><a class="btn btn-danger" href="delete_apporteur?appId=' + data.id + '" role="button"><i class="bi bi-trash3"></i></a></div>';
                 },
                 width: "50px",
                 orderable: false,

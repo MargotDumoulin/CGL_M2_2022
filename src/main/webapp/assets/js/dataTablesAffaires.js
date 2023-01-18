@@ -68,7 +68,7 @@ $(document).ready(function () {
             },
             {
                 data: 'commissions',
-                render: function ( data ) {
+                render: function ( data, _type, row ) {
                     for (com of data) {
                         if (com.id.apporteur.id == row['apporteur']['id']) {
                             return com.montant + ' €';
@@ -82,8 +82,8 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function ( data ) {
-                    return '<a class="btn btn-primary" href="add_affaire?affId=' + data.id + '" role="button"><i class="bi bi-pencil"/></a>' +
-                           '<a class="btn btn-danger" href="delete_affaire?affId=' + data.id + '" role="button"><i class="bi bi-trash3"/></a>';
+                    return '<div><a class="btn btn-primary" href="add_affaire?affId=' + data.id + '" role="button"><i class="bi bi-pencil"></i></a></div>' +
+                           '<div><a class="btn btn-danger" href="delete_affaire?affId=' + data.id + '" role="button"><i class="bi bi-trash3"></i></a></div>';
                 },
                 width: "220px",
                 orderable: false,
