@@ -20,6 +20,9 @@ public class ApporteurEntity implements IEntity<Long> {
     private Long id;
     private String nom;
     private String prenom;
+    
+    @Column(name = "IS_DELETED")
+    private boolean isDeleted;
 
     @OneToOne
     @JoinColumn(name="parrain_id", referencedColumnName = "id")
