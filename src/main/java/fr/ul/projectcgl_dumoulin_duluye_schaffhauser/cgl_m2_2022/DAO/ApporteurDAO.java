@@ -5,9 +5,6 @@ import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.Apporteu
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Stream;
 
 public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
 
