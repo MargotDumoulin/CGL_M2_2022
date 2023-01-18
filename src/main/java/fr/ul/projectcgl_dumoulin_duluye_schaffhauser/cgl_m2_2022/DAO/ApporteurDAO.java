@@ -1,11 +1,11 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO;
 
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
-import jakarta.ejb.Local;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.stream.Stream;
 
 public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
 
