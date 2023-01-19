@@ -59,7 +59,7 @@ public class ApporteursDataServlet extends HttpServlet {
             Optional<Double> resMC = CommissionDAO.getInstance().getTotalByMonthAndApporteurId(currentDate.getMonthValue(), currentDate.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
             Boolean isAffilie = ApporteurDAO.getInstance().getIsAffilie(s.getId());
 
-            apporteurs.add(new Apporteur(s.getId(), isAffilie, s.getNom(), s.getPrenom(), resMC.orElse(0.0), resMM1.orElse(0.0), resMM2.orElse(0.0)));
+            apporteurs.add(new Apporteur(s.getId(), isAffilie, s.getNom(), s.getPrenom(), s.isDeleted(), resMC.orElse(0.0), resMM1.orElse(0.0), resMM2.orElse(0.0)));
         });
 
         // Send response

@@ -44,8 +44,13 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function ( data ) {
-                    return '<div><a class="btn btn-primary" href="add_apporteur?appId=' + data.id + '" role="button"><i class="bi bi-pencil"></i></a></div>' +
-                           '<div><a class="btn btn-danger" href="delete_apporteur?appId=' + data.id + '" role="button"><i class="bi bi-trash3"></i></a></div>';
+                    if (!data.isDeleted) {
+                        return '<div><a class="btn btn-primary" href="add_apporteur?appId=' + data.id + '" role="button"><i class="bi bi-pencil"></i></a></div>' +
+                               '<div><a class="btn btn-danger" href="delete_apporteur?appId=' + data.id + '" role="button"><i class="bi bi-trash3"></i></a></div>';
+                    }
+                    else {
+                        return '<i>Supprimé</i>';
+                    }
                 },
                 width: "50px",
                 orderable: false,
