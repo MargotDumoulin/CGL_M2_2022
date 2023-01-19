@@ -20,7 +20,7 @@ $(document).ready(function () {
                         : '<i class="bi bi-x-lg"></i>'
                 },
                 width: "50px",
-                orderable: false,
+                orderable: true,
             },
             { data: 'totalCommissionsMCourant', width: "150px" },
             { data: 'totalCommissionsMM1', width: "150px" },

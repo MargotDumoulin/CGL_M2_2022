@@ -24,6 +24,14 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
     }
 
     public Stream<ApporteurEntity> getAll(int pageSize, int start, String orderBy, String dir) {
+        if (orderBy.matches("affilie")) {
+            return this.getAllOrderedByAffilie(pageSize, start, dir);
+        } else {
+            return this.getAllClassic(pageSize, start, orderBy, dir);
+        }
+    }
+
+    public Stream<ApporteurEntity> getAllClassic(int pageSize, int start, String orderBy, String dir) {
         String orderByFormatted = orderBy;
         LocalDate dateToFilterWith = this.getLocalDateForOrderBy(orderBy);
 
@@ -50,6 +58,7 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                 .setParameter("month", dateToFilterWith.getMonthValue())
                 .setParameter("year", dateToFilterWith.getYear())
                 .getResultStream();
+
     }
 
     public LocalDate getLocalDateForOrderBy (String orderBy) {
@@ -62,13 +71,37 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
         }
     }
 
+    public Stream<ApporteurEntity> getAllOrderedByAffilie (int pageSize, int start, String dir) {
+        Long durationSetting = Long.parseLong(SettingsDAO.getInstance().getByCode("DUREE_MIN_AFFILIE").getValeur());
+        LocalDate compDate = LocalDate.from(LocalDate.now()).minusMonths(durationSetting);
+
+        String sqlQuery = """
+                 SELECT apporteur.*
+                 FROM apporteur
+                 LEFT JOIN(
+                     SELECT COUNT(affaire.id) AS nb_affaires, apporteur.ID
+                     FROM apporteur, affaire
+                     WHERE apporteur.ID = affaire.APPORTEUR_ID AND affaire.DATE >= :comparativeDate
+                 ) AS a ON a.ID = apporteur.ID
+                """;
+
+        sqlQuery += " ORDER BY a.nb_affaires " + dir;
+
+        return getSession()
+                .createNativeQuery(sqlQuery, ApporteurEntity.class)
+                .setFirstResult(start)
+                .setMaxResults(pageSize)
+                .setParameter("comparativeDate", Date.from(compDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
+                .getResultStream();
+    }
+
     public Boolean getIsAffilie(Long apporteurId) {
         Long durationSetting = Long.parseLong(SettingsDAO.getInstance().getByCode("DUREE_MIN_AFFILIE").getValeur());
         Long minAffairesSetting = Long.parseLong(SettingsDAO.getInstance().getByCode("NB_MIN_AFFAIRES").getValeur());
         LocalDate compDate = LocalDate.from(LocalDate.now()).minusMonths(durationSetting);
 
         String hqlQuery = "" +
-                "SELECT COUNT(apporteur) " +
+                "SELECT COUNT(affaire.id) " +
                 "FROM Apporteur AS apporteur, Affaire AS affaire " +
                 "WHERE apporteur.id = affaire.apporteur.id " +
                 "AND apporteur.id = :apporteurId " +
