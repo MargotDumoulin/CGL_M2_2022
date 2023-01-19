@@ -31,7 +31,7 @@ public class SettingsDAOTest {
                 (7, 'INDIR_PARR_VALUE', 'Pourcentage de commission touché par un parrain indirect', '0.5');
                 """;
         
-        session.createNativeQuery("DELETE FROM PARAMETRES", SettingEntity.class).executeUpdate();
+        session.createNativeQuery("DELETE FROM parametres", SettingEntity.class).executeUpdate();
         
         session.createNativeQuery(insertSettingsQuery, SettingEntity.class).executeUpdate();
         

@@ -28,7 +28,7 @@ public class ApporteurDAOTest {
         Transaction tx = session.beginTransaction();
 
         String insertQuery = """
-                INSERT INTO APPORTEUR (`ID`, `PRENOM`, `NOM`, `PARRAIN_ID`) VALUES
+                INSERT INTO apporteur (`ID`, `PRENOM`, `NOM`, `PARRAIN_ID`) VALUES
                 (1, 'Antony', 'DUDU', NULL),
                 (2, 'Margot', 'DUMOULING', 1),
                 (3, 'Bastieng', 'CHAT FAOU ZER', 1),
@@ -38,11 +38,10 @@ public class ApporteurDAOTest {
                 (7, 'Tutur', 'TROGNON', 4);
                 """;
 
-
-        session.createNativeQuery("DELETE FROM COMMISSION", CommissionEntity.class).executeUpdate();
-        session.createNativeQuery("DELETE FROM AFFAIRE", AffaireEntity.class).executeUpdate();
-        session.createNativeQuery("UPDATE APPORTEUR SET PARRAIN_ID = NULL", ApporteurEntity.class).executeUpdate();
-        session.createNativeQuery("DELETE FROM APPORTEUR", ApporteurEntity.class).executeUpdate();
+        session.createNativeQuery("DELETE FROM commission", CommissionEntity.class).executeUpdate();
+        session.createNativeQuery("DELETE FROM affaire", AffaireEntity.class).executeUpdate();
+        session.createNativeQuery("UPDATE apporteur SET PARRAIN_ID = NULL", ApporteurEntity.class).executeUpdate();
+        session.createNativeQuery("DELETE FROM apporteur", ApporteurEntity.class).executeUpdate();
 
         session.createNativeQuery(insertQuery, ApporteurEntity.class).executeUpdate();
 

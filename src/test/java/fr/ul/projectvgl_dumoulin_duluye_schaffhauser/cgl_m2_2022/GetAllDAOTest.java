@@ -34,7 +34,7 @@ public class GetAllDAOTest {
                 (7, 'Tutur', 'TROGNON', 4, 0);
                 """;
         String insertAffaireQuery = """
-                INSERT INTO AFFAIRE (`ID`, `APPORTEUR_ID`, `DATE`, `COMMISSION_GLOBALE`) VALUES
+                INSERT INTO affaire (`ID`, `APPORTEUR_ID`, `DATE`, `COMMISSION_GLOBALE`) VALUES
                 (1, 1, '2023-01-11', 200),
                 (2, 2, '2023-01-11', 150),
                 (3, 1, '2022-12-14', 100),
@@ -42,7 +42,7 @@ public class GetAllDAOTest {
                 (5, 2, '2022-11-16', 140);
                 """;
         String insertCommissionsQuery = """
-                INSERT INTO COMMISSION (`AFFAIRE_ID`, `APPORTEUR_ID`, `MONTANT`) VALUES
+                INSERT INTO commission (`AFFAIRE_ID`, `APPORTEUR_ID`, `MONTANT`) VALUES
                 (1, 1, 1),
                 (1, 2, 3),
                 (1, 3, 2),

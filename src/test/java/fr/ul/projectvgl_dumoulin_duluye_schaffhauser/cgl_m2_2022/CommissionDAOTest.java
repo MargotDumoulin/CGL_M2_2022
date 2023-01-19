@@ -28,7 +28,7 @@ public class CommissionDAOTest {
         Transaction tx = session.beginTransaction();
 
         String insertApporteurQuery = """
-                INSERT INTO APPORTEUR (`ID`, `PRENOM`, `NOM`, `PARRAIN_ID`) VALUES
+                INSERT INTO apporteur (`ID`, `PRENOM`, `NOM`, `PARRAIN_ID`) VALUES
                 (1, 'Antony', 'DUDU', NULL),
                 (2, 'Margot', 'DUMOULING', 1),
                 (3, 'Bastieng', 'CHAT FAOU ZER', 1),
@@ -38,7 +38,7 @@ public class CommissionDAOTest {
                 (7, 'Tutur', 'TROGNON', 4);
                 """;
         String insertAffaireQuery = """
-                INSERT INTO AFFAIRE (`ID`, `APPORTEUR_ID`, `DATE`, `COMMISSION_GLOBALE`) VALUES
+                INSERT INTO affaire (`ID`, `APPORTEUR_ID`, `DATE`, `COMMISSION_GLOBALE`) VALUES
                 (1, 1, '2023-01-11', 200),
                 (2, 1, '2023-01-11', 200),
                 (3, 2, '2022-12-14', 200),
@@ -46,7 +46,7 @@ public class CommissionDAOTest {
                 (5, 2, '2022-11-16', 200);
                 """;
         String insertCommissionsQuery = """
-                INSERT INTO COMMISSION (`AFFAIRE_ID`, `APPORTEUR_ID`, `MONTANT`) VALUES
+                INSERT INTO commission (`AFFAIRE_ID`, `APPORTEUR_ID`, `MONTANT`) VALUES
                 (1, 1, 1),
                 (1, 2, 2),
                 (1, 3, 3),
@@ -57,10 +57,10 @@ public class CommissionDAOTest {
                 (3, 3, 2);
                 """;
 
-        session.createNativeQuery("DELETE FROM COMMISSION", CommissionEntity.class).executeUpdate();
-        session.createNativeQuery("DELETE FROM AFFAIRE", AffaireEntity.class).executeUpdate();
-        session.createNativeQuery("UPDATE APPORTEUR SET PARRAIN_ID = NULL", ApporteurEntity.class).executeUpdate();
-        session.createNativeQuery("DELETE FROM APPORTEUR", ApporteurEntity.class).executeUpdate();
+        session.createNativeQuery("DELETE FROM commission", CommissionEntity.class).executeUpdate();
+        session.createNativeQuery("DELETE FROM affaire", AffaireEntity.class).executeUpdate();
+        session.createNativeQuery("UPDATE apporteur SET PARRAIN_ID = NULL", ApporteurEntity.class).executeUpdate();
+        session.createNativeQuery("DELETE FROM apporteur", ApporteurEntity.class).executeUpdate();
 
         session.createNativeQuery(insertApporteurQuery, ApporteurEntity.class).executeUpdate();
         session.createNativeQuery(insertAffaireQuery, AffaireEntity.class).executeUpdate();
