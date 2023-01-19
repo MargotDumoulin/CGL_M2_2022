@@ -10,21 +10,21 @@ import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
-
+    
     private static ApporteurDAO instance;
-
+    
     public static ApporteurDAO getInstance() {
         if (instance == null) {
             instance = new ApporteurDAO();
         }
-
+        
         return instance;
     }
-
+    
     private ApporteurDAO() {
         super(ApporteurEntity.class);
     }
-
+    
     public Stream<ApporteurEntity> getAll(int pageSize, int start, String orderBy, String dir) {
         if (orderBy.matches("affilie")) {
             return this.getAllOrderedByAffilie(pageSize, start, dir);
@@ -32,23 +32,35 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
             return this.getAllClassic(pageSize, start, orderBy, dir);
         }
     }
-
-    public Long getAllNbOfResults () {
+    
+    public Stream<ApporteurEntity> getAllAvailable() {
+        String hqlQuery = """
+                SELECT apporteur
+                FROM Apporteur AS apporteur
+                WHERE apporteur.isDeleted = false
+                """;
+        
+        return getSession()
+                .createQuery(hqlQuery, ApporteurEntity.class)
+                .getResultStream();
+    }
+    
+    public Long getAllNbOfResults() {
         String hqlQuery = "SELECT COUNT(*) FROM Apporteur ";
-
+        
         return getSession()
                 .createQuery(hqlQuery, Long.class)
                 .getSingleResult();
     }
-
+    
     public Stream<ApporteurEntity> getAllClassic(int pageSize, int start, String orderBy, String dir) {
         String orderByFormatted = orderBy;
         LocalDate dateToFilterWith = this.getLocalDateForOrderBy(orderBy);
-
+        
         if (orderBy.contains("total")) {
             orderByFormatted = " COALESCE(SUM(c.MONTANT), 0) ";
         }
-
+        
         String sqlQuery = """
                 SELECT t_apporteur.*
                 FROM apporteur AS t_apporteur
@@ -60,7 +72,7 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                 GROUP BY t_apporteur.id
                 """;
         sqlQuery += " ORDER BY " + orderByFormatted + " " + dir;
-
+        
         return getSession()
                 .createNativeQuery(sqlQuery, ApporteurEntity.class)
                 .setFirstResult(start)
@@ -68,12 +80,12 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                 .setParameter("month", dateToFilterWith.getMonthValue())
                 .setParameter("year", dateToFilterWith.getYear())
                 .getResultStream();
-
+        
     }
-
+    
     public LocalDate getLocalDateForOrderBy(String orderBy) {
         LocalDate currentDate = LocalDate.now();
-
+        
         switch (orderBy) {
             case "totalCommissionsMM1":
                 return LocalDate.from(currentDate).minusMonths(1);
@@ -83,11 +95,11 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                 return currentDate;
         }
     }
-
+    
     public Stream<ApporteurEntity> getAllOrderedByAffilie(int pageSize, int start, String dir) {
         Long durationSetting = Long.parseLong(SettingsDAO.getInstance().getByCode("DUREE_MIN_AFFILIE").getValeur());
         LocalDate compDate = LocalDate.from(LocalDate.now()).minusMonths(durationSetting);
-
+        
         String sqlQuery = """
                  SELECT apporteur.*
                  FROM apporteur
@@ -97,9 +109,9 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                      WHERE apporteur.ID = affaire.APPORTEUR_ID AND affaire.DATE >= :comparativeDate
                  ) AS a ON a.ID = apporteur.ID
                 """;
-
+        
         sqlQuery += " ORDER BY a.nb_affaires " + dir;
-
+        
         return getSession()
                 .createNativeQuery(sqlQuery, ApporteurEntity.class)
                 .setFirstResult(start)
@@ -107,28 +119,28 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                 .setParameter("comparativeDate", Date.from(compDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
                 .getResultStream();
     }
-
+    
     public Boolean getIsAffilie(Long apporteurId) {
         Long durationSetting = Long.parseLong(SettingsDAO.getInstance().getByCode("DUREE_MIN_AFFILIE").getValeur());
         Long minAffairesSetting = Long.parseLong(SettingsDAO.getInstance().getByCode("NB_MIN_AFFAIRES").getValeur());
         LocalDate compDate = LocalDate.from(LocalDate.now()).minusMonths(durationSetting);
-
+        
         String hqlQuery = "" +
                 "SELECT COUNT(affaire.id) " +
                 "FROM Apporteur AS apporteur, Affaire AS affaire " +
                 "WHERE apporteur.id = affaire.apporteur.id " +
                 "AND apporteur.id = :apporteurId " +
                 "AND affaire.date >= :comparativeDate";
-
+        
         Long nbOfAffaires = getSession()
                 .createQuery(hqlQuery, Long.class)
                 .setParameter("apporteurId", apporteurId)
                 .setParameter("comparativeDate", Date.from(compDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
                 .getSingleResult();
-
+        
         return nbOfAffaires >= minAffairesSetting;
     }
-
+    
     @Override
     public boolean isPresent(Long id) {
         return Optional.ofNullable(getById(id))
@@ -136,21 +148,21 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                 .map(e -> !e)
                 .orElse(false);
     }
-
+    
     @Override
     public boolean delete(ApporteurEntity entity) {
         entity.setDeleted(true);
-
+        
         try (Session session = getSession()) {
             persistEntity(session.merge(entity));
         } catch (Exception e) {
             e.printStackTrace();
             throw e;
         }
-
+        
         return isPresent(entity.getId());
     }
-
+    
     @Override
     public boolean delete(Long id) {
         return delete(getById(id));

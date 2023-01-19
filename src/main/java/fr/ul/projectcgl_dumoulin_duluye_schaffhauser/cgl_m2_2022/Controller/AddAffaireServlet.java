@@ -16,8 +16,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.Date;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Stream;
 
 @WebServlet(
@@ -78,7 +76,7 @@ public class AddAffaireServlet extends HttpServlet {
                     || request.getAttribute("errorMessageDate") != null
                     || request.getAttribute("errorMessageApporteur") != null) {
 
-                Stream<ApporteurEntity> apporteurs = ApporteurDAO.getInstance().getAll();
+                Stream<ApporteurEntity> apporteurs = ApporteurDAO.getInstance().getAllAvailable();
                 request.setAttribute("apporteurs", apporteurs.toArray());
                 RequestDispatcher dispatcher = request.getRequestDispatcher("add_affaire.jsp");
                 dispatcher.forward(request, response);
