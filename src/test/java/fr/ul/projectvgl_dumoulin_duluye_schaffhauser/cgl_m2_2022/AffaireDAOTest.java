@@ -6,6 +6,7 @@ import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.CommissionD
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.AffaireEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.CommissionEntity;
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.SettingEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.utils.HibernateUtils;
 import org.hibernate.Session;
 import org.hibernate.Transaction;
@@ -61,15 +62,26 @@ public class AffaireDAOTest {
                 (5, 1, 3),
                 (5, 3, 2);
                 """;
+        String insertSettingsQuery = """
+                INSERT INTO `parametres` (`ID`, `CODE`, `LABEL`, `VALEUR`) VALUES
+                (1, 'NB_PARRAINGE_MAX', 'Niveau maximum de parrainage', '13'),
+                (2, 'NB_MIN_AFFAIRES', 'Nombre d affaires minimum à apporter pour rester affilié', '1'),
+                (3, 'DUREE_MIN_AFFILIE', 'Durée pour apporter une nouvelle affaire afin de rester affilié (en mois)', '3'),
+                (5, 'COMMISSION', 'Pourcentage de commission touché par chaque niveau de parrain', '10'),
+                (6, 'DIR_PARR_VALUE', 'Pourcentage de commission touché par un parrain direct', '0.05'),
+                (7, 'INDIR_PARR_VALUE', 'Pourcentage de commission touché par un parrain indirect', '0.5');
+                """;
 
         session.createNativeQuery("DELETE FROM COMMISSION", CommissionEntity.class).executeUpdate();
         session.createNativeQuery("DELETE FROM AFFAIRE", AffaireEntity.class).executeUpdate();
         session.createNativeQuery("UPDATE APPORTEUR SET PARRAIN_ID = NULL", ApporteurEntity.class).executeUpdate();
         session.createNativeQuery("DELETE FROM APPORTEUR", ApporteurEntity.class).executeUpdate();
+        session.createNativeQuery("DELETE FROM PARAMETRES", SettingEntity.class).executeUpdate();
 
         session.createNativeQuery(insertApporteurQuery, ApporteurEntity.class).executeUpdate();
         session.createNativeQuery(insertAffaireQuery, AffaireEntity.class).executeUpdate();
         session.createNativeQuery(insertCommissionsQuery, CommissionEntity.class).executeUpdate();
+        session.createNativeQuery(insertSettingsQuery, SettingEntity.class).executeUpdate();
 
         tx.commit();
     }

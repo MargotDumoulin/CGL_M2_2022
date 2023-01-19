@@ -1,14 +1,6 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO;
 
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.AffaireEntity;
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.SettingEntity;
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.utils.HibernateUtils;
-import org.hibernate.Session;
-import org.hibernate.Transaction;
-
-import java.util.List;
-import java.util.stream.Stream;
 
 public class SettingsDAO extends AbstractDAO<SettingEntity, Long> {
 
@@ -39,16 +31,11 @@ public class SettingsDAO extends AbstractDAO<SettingEntity, Long> {
                 .getSingleResult();
     }
 
-    public void update(Long id, String value){
-        Session session = getSession();
-        Transaction tx = session.beginTransaction();
-
-        SettingEntity settingEntity =  (SettingEntity) session.load(SettingEntity.class, id);
+    public SettingEntity update(Long id, String value){
+        SettingEntity settingEntity = getById(id);
 
         settingEntity.setValeur(value);
-        session.save(settingEntity);
-
-        tx.commit();
-        session.close();
+        
+        return super.update(settingEntity);
     }
 }
