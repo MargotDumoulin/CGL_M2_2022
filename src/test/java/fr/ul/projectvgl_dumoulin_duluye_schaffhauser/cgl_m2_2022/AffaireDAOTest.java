@@ -23,6 +23,7 @@ public class AffaireDAOTest {
     private static final long ID_TO_DELETE = 3;
     private static final long ID_TO_DELETE_2 = 4;
     private static final long ID_APPORTEUR = 3;
+    private static final long ID_APPORTEUR_PARRAIN = 1;
     private static final long ID_TO_EXIST_TRUE = 1;
     private static final long ID_TO_EXIST_FALSE = 0;
 
@@ -92,6 +93,8 @@ public class AffaireDAOTest {
     public void insertAffaire() {
         AffaireEntity affaireSave;
         AffaireEntity affaireGet;
+        CommissionEntity commissionApporteur;
+        CommissionEntity commissionParrain;
         Date date = new Date(1663711200000L);
 
         affaireSave = AffaireEntity.builder()
@@ -101,8 +104,11 @@ public class AffaireDAOTest {
                 .commissionGlobale(195.0)
                 .build();
 
-        AffaireDAO.getInstance().insert(affaireSave);
+        AffaireDAO.getInstance().insertOrUpdate(affaireSave, false);
         affaireGet = AffaireDAO.getInstance().getById(affaireSave.getId());
+
+        commissionApporteur = CommissionDAO.getInstance().getById(affaireSave.getId(), ID_APPORTEUR);
+        commissionParrain = CommissionDAO.getInstance().getById(affaireSave.getId(), ID_APPORTEUR_PARRAIN);
 
         assertThat(affaireSave)
                 .isNotNull()
@@ -115,6 +121,11 @@ public class AffaireDAOTest {
                 .returns(ID_APPORTEUR, e -> e.getApporteur().getId())
                 .returns("2022-09-21 00:00:00.0", e -> String.valueOf(e.getDate()))
                 .returns(195.0, AffaireEntity::getCommissionGlobale);
+
+        assertThat(commissionApporteur)
+                .isNotNull();
+        assertThat(commissionParrain)
+                .isNotNull();
     }
 
     @Test

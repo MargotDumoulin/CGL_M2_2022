@@ -14,8 +14,6 @@ import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 @WebServlet(
@@ -54,12 +52,12 @@ public class ApporteursDataServlet extends HttpServlet {
             LocalDate m1Date = LocalDate.from(currentDate).minusMonths(1);
             LocalDate m2Date = LocalDate.from(currentDate).minusMonths(2);
 
-            Optional<Double> resMM1 = CommissionDAO.getInstance().getTotalByMonthAndApporteurId(m1Date.getMonthValue(), m1Date.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
-            Optional<Double> resMM2 = CommissionDAO.getInstance().getTotalByMonthAndApporteurId(m2Date.getMonthValue(), m2Date.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
-            Optional<Double> resMC = CommissionDAO.getInstance().getTotalByMonthAndApporteurId(currentDate.getMonthValue(), currentDate.getYear(), s.getId()).map(Optional::ofNullable).findFirst().flatMap(Function.identity());
+            Double resMM1 = CommissionDAO.getInstance().getTotalByMonthAndApporteurId(m1Date.getMonthValue(), m1Date.getYear(), s.getId());
+            Double resMM2 = CommissionDAO.getInstance().getTotalByMonthAndApporteurId(m2Date.getMonthValue(), m2Date.getYear(), s.getId());
+            Double resMC = CommissionDAO.getInstance().getTotalByMonthAndApporteurId(currentDate.getMonthValue(), currentDate.getYear(), s.getId());
             Boolean isAffilie = ApporteurDAO.getInstance().getIsAffilie(s.getId());
 
-            apporteurs.add(new Apporteur(s.getId(), isAffilie, s.getNom(), s.getPrenom(), s.isDeleted(), resMC.orElse(0.0), resMM1.orElse(0.0), resMM2.orElse(0.0)));
+            apporteurs.add(new Apporteur(s.getId(), isAffilie, s.getNom(), s.getPrenom(), s.isDeleted(), (resMC != null ? resMC : 0D), (resMM1 != null ? resMM1 : 0D), (resMM2 != null ? resMM2 : 0D)));
         });
 
         // Send response

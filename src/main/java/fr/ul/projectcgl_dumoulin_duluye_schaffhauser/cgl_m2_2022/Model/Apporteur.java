@@ -1,11 +1,11 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Model;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 @Getter
 @Setter
+@Builder
+@EqualsAndHashCode(of = {"id"})
 @AllArgsConstructor
 public class Apporteur {
     private Long id;
