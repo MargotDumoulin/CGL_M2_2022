@@ -63,14 +63,14 @@ public class CommissionDAO {
 
         if (parr != null) {
             // Insert commission for first parrain
-            Double parrainCom = ApporteurDAO.getInstance().getIsAffilie(parr.getId()) ? globalCom * dirParrPercent : 0;
+            Double parrainCom = (ApporteurDAO.getInstance().getIsAffilie(parr.getId()) && !parr.isDeleted()) ? globalCom * dirParrPercent : 0;
             totalComParrain += parrainCom;
             this.insertCommission(affaire, parr, session, parrainCom);
 
             // Insert commissions pour les parrains d'après...
             parr = parr.getParrain();
             while (parr != null) {
-                parrainCom = ApporteurDAO.getInstance().getIsAffilie(parr.getId()) ? parrainCom * indirParrPercent : 0;
+                parrainCom = (ApporteurDAO.getInstance().getIsAffilie(parr.getId()) && !parr.isDeleted()) ? parrainCom * indirParrPercent : 0;
                 totalComParrain += parrainCom;
                 this.insertCommission(affaire, parr, session, parrainCom);
 

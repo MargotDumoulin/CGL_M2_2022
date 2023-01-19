@@ -12,7 +12,7 @@ function showParrains (d) {
     let current = d.apporteur.parrain;
     let str = '';
     while (current) {
-        str += '<li>' + current.nom + ' ' + current.prenom + ': ' + getCommissionAmount(current.id, d.commissions) + ' €</li>';
+        str += `<li>${current.nom} ${current.prenom} ` + (current.isDeleted ? '(Supprimé) ' : '') +  ': ' + getCommissionAmount(current.id, d.commissions) + ' €</li>';
         current = current.parrain;
     }
     return str;
@@ -82,8 +82,8 @@ $(document).ready(function () {
             {
                 data: null,
                 render: function ( data ) {
-                    return '<div><a class="btn btn-primary" href="add_affaire?affId=' + data.id + '" role="button"><i class="bi bi-pencil"></i></a></div>' +
-                           '<div><a class="btn btn-danger" href="delete_affaire?affId=' + data.id + '" role="button"><i class="bi bi-trash3"></i></a></div>';
+                    return '<div><a class="btn btn-primary" style="margin-right: 10px" href="add_affaire?affId=' + data.id + '" role="button"><i class="bi bi-pencil"></i></a>' +
+                           '<a class="btn btn-danger" href="delete_affaire?affId=' + data.id + '" role="button"><i class="bi bi-trash3"></i></a></div>';
                 },
                 width: "220px",
                 orderable: false,
