@@ -141,7 +141,7 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
     }
 
     public Long getAllNbOfResults(Boolean filterByCurrMonth) {
-        String query = "from Affaire AS affaire";
+        String query = "SELECT COUNT(affaire) from Affaire AS affaire";
         if (filterByCurrMonth) query += " WHERE MONTH(affaire.date) = " + LocalDate.now().getMonthValue();
 
         return getSession()
