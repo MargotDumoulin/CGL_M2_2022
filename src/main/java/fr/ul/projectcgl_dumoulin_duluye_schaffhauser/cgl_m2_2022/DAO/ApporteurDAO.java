@@ -31,6 +31,14 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
         }
     }
 
+    public Long getAllNbOfResults () {
+        String hqlQuery = "SELECT COUNT(*) FROM Apporteur ";
+
+        return getSession()
+                .createQuery(hqlQuery, Long.class)
+                .getSingleResult();
+    }
+
     public Stream<ApporteurEntity> getAllClassic(int pageSize, int start, String orderBy, String dir) {
         String orderByFormatted = orderBy;
         LocalDate dateToFilterWith = this.getLocalDateForOrderBy(orderBy);

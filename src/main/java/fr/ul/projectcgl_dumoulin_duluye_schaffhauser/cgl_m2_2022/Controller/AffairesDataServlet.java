@@ -61,13 +61,13 @@ public class AffairesDataServlet extends HttpServlet {
 
         if (appId != null && appId.matches("-?\\d+(\\.\\d+)?")) {
             affairesEntities = AffaireDAO.getInstance().getAllDirByAppId(pageSize, start, Long.parseLong(appId), columns[columnToOrder], orderDirection, filterByCurrMonth);
-            numberOfResults = AffaireDAO.getInstance().getAllDirByAppId(Long.parseLong(appId)).count();
+            numberOfResults = AffaireDAO.getInstance().getAllDirByAppIdNbOfResults(Long.parseLong(appId), filterByCurrMonth);
         } else if (appIdAll != null && appIdAll.matches("-?\\d+(\\.\\d+)?")) {
             affairesEntities = AffaireDAO.getInstance().getAllByAppId(pageSize, start, Long.parseLong(appIdAll), columns[columnToOrder], orderDirection, filterByCurrMonth);
-            numberOfResults = AffaireDAO.getInstance().getAllByAppId(Long.parseLong(appIdAll)).count();
+            numberOfResults = AffaireDAO.getInstance().getAllByAppIdNbOfResults(Long.parseLong(appIdAll), filterByCurrMonth);
         } else {
             affairesEntities = AffaireDAO.getInstance().getAll(pageSize, start, columns[columnToOrder], orderDirection, filterByCurrMonth);
-            numberOfResults = AffaireDAO.getInstance().getAll().count();
+            numberOfResults = AffaireDAO.getInstance().getAllNbOfResults(filterByCurrMonth);
         }
 
         affairesEntities.forEach(a -> {

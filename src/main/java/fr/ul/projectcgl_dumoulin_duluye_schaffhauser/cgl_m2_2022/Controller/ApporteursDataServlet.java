@@ -47,7 +47,7 @@ public class ApporteursDataServlet extends HttpServlet {
         // Get and initialize apporteurs
         List<Apporteur> apporteurs = new ArrayList<>();
         Stream<ApporteurEntity> apporteursEntities = ApporteurDAO.getInstance().getAll(pageSize, start, columns[columnToOrder], orderDirection);
-        long numberOfResults = ApporteurDAO.getInstance().getAll().count();
+        long numberOfResults = ApporteurDAO.getInstance().getAllNbOfResults();
 
         apporteursEntities.forEach(s -> {
             LocalDate currentDate = LocalDate.now();
