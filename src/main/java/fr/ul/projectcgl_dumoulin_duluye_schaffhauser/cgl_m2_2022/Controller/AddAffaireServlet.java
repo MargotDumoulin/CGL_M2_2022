@@ -28,8 +28,8 @@ public class AddAffaireServlet extends HttpServlet {
             throws ServletException, IOException {
 
         request.setAttribute("operation", "Ajouter");
-
-        Stream<ApporteurEntity> apporteurs = ApporteurDAO.getInstance().getAll();
+    
+        Stream<ApporteurEntity> apporteurs = ApporteurDAO.getInstance().getAllAvailable();
         request.setAttribute("apporteurs", apporteurs.toArray());
 
         String affId = request.getParameter("affId");
