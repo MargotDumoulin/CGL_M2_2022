@@ -70,6 +70,16 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
                 .getResultStream();
     }
 
+    public Long getAllDirByAppIdNbOfResults(Long apporteurId, Boolean filterByCurrMonth) {
+        String query = "SELECT COUNT(affaire) FROM Affaire AS affaire WHERE affaire.apporteur.id = :apporteurId";
+        if (filterByCurrMonth) query += " AND MONTH(affaire.date) = " + LocalDate.now().getMonthValue();
+
+        return getSession()
+                .createQuery(query, Long.class)
+                .setParameter("apporteurId", apporteurId)
+                .getSingleResult();
+    }
+
     public Stream<AffaireEntity> getAllByAppId(int pageSize, int start, Long apporteurId, String orderBy, String dir, Boolean filterByCurrMonth) {
         String query = """
                 SELECT affaire 
@@ -102,6 +112,22 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
                 .getResultStream();
     }
 
+    public Long getAllByAppIdNbOfResults(Long apporteurId, Boolean filterByCurrMonth) {
+        String query = """
+                SELECT COUNT(affaire) 
+                FROM Affaire AS affaire, Commission AS commission 
+                WHERE commission.id.apporteur.id = :apporteurId 
+                AND commission.id.affaire.id = affaire.id
+                """;
+
+        if (filterByCurrMonth) query += " AND MONTH(affaire.date) = " + LocalDate.now().getMonthValue();
+
+        return getSession()
+                .createQuery(query, Long.class)
+                .setParameter("apporteurId", apporteurId)
+                .getSingleResult();
+    }
+
     public Stream<AffaireEntity> getAll(int pageSize, int start, String orderBy, String dir, Boolean filterByCurrMonth) {
         String query = "from Affaire AS affaire";
         if (filterByCurrMonth) query += " WHERE MONTH(affaire.date) = " + LocalDate.now().getMonthValue();
@@ -112,6 +138,15 @@ public class AffaireDAO extends AbstractDAO<AffaireEntity, Long> {
                 .setFirstResult(start)
                 .setMaxResults(pageSize)
                 .getResultStream();
+    }
+
+    public Long getAllNbOfResults(Boolean filterByCurrMonth) {
+        String query = "from Affaire AS affaire";
+        if (filterByCurrMonth) query += " WHERE MONTH(affaire.date) = " + LocalDate.now().getMonthValue();
+
+        return getSession()
+                .createQuery(query, Long.class)
+                .getSingleResult();
     }
 
     @Override
