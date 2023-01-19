@@ -117,37 +117,37 @@ public class ApporteurDAOTest {
 
     @Test
     public void deleteApporteurByEntity() {
-        boolean isDeleted;
+        boolean isPresent;
 
         // Suppression de l'apporteur X
 
-        isDeleted = ApporteurDAO.getInstance().delete(ApporteurDAO.getInstance().getById(ID_TO_DELETE));
+        isPresent = ApporteurDAO.getInstance().delete(ApporteurDAO.getInstance().getById(ID_TO_DELETE));
 
-        assertThat(isDeleted).isFalse();
+        assertThat(isPresent).isFalse();
         assertThat(ApporteurDAO.getInstance().isPresent(ID_TO_DELETE)).isFalse();
 
         // Verification que personne n'a X en parrainS
 
         assertThat(ApporteurDAO.getInstance().getAll())
                 .isNotNull()
-                .noneMatch(e -> e.getParrain() != null && e.getParrain().getId() == ID_TO_DELETE);
+                .noneMatch(e -> e.getId() == ID_TO_DELETE && !e.isDeleted());
     }
     @Test
     public void deleteApporteurById() {
-        boolean isDeleted;
+        boolean isPresent;
 
         // Suppression de l'apporteur X
 
-        isDeleted = ApporteurDAO.getInstance().delete(ID_TO_DELETE_2);
+        isPresent = ApporteurDAO.getInstance().delete(ID_TO_DELETE_2);
 
-        assertThat(isDeleted).isFalse();
+        assertThat(isPresent).isFalse();
         assertThat(ApporteurDAO.getInstance().isPresent(ID_TO_DELETE_2)).isFalse();
 
         // Verification que personne n'a X en parrain
 
         assertThat(ApporteurDAO.getInstance().getAll())
                 .isNotNull()
-                .noneMatch(e -> e.getParrain() != null && e.getParrain().getId() == ID_TO_DELETE_2);
+                .noneMatch(e -> e.getId() == ID_TO_DELETE_2 && !e.isDeleted());
     }
 
     @Test

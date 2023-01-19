@@ -1,10 +1,12 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO;
 
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
+import org.hibernate.Session;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
@@ -47,7 +49,7 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                            LEFT JOIN affaire AS t_affaire ON t_commission.AFFAIRE_ID = t_affaire.ID
                            WHERE YEAR(t_affaire.DATE) = :year
                              AND MONTH(t_affaire.DATE) = :month) AS c ON c.APPORTEUR_ID = t_apporteur.ID
-                GROUP BY t_apporteur.id 
+                GROUP BY t_apporteur.id
                 """;
         sqlQuery += " ORDER BY " + orderByFormatted + " " + dir;
 
@@ -61,17 +63,20 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
 
     }
 
-    public LocalDate getLocalDateForOrderBy (String orderBy) {
+    public LocalDate getLocalDateForOrderBy(String orderBy) {
         LocalDate currentDate = LocalDate.now();
 
         switch (orderBy) {
-            case "totalCommissionsMM1": return LocalDate.from(currentDate).minusMonths(1);
-            case "totalCommissionsMM2": return LocalDate.from(currentDate).minusMonths(2);
-            default: return currentDate;
+            case "totalCommissionsMM1":
+                return LocalDate.from(currentDate).minusMonths(1);
+            case "totalCommissionsMM2":
+                return LocalDate.from(currentDate).minusMonths(2);
+            default:
+                return currentDate;
         }
     }
 
-    public Stream<ApporteurEntity> getAllOrderedByAffilie (int pageSize, int start, String dir) {
+    public Stream<ApporteurEntity> getAllOrderedByAffilie(int pageSize, int start, String dir) {
         Long durationSetting = Long.parseLong(SettingsDAO.getInstance().getByCode("DUREE_MIN_AFFILIE").getValeur());
         LocalDate compDate = LocalDate.from(LocalDate.now()).minusMonths(durationSetting);
 
@@ -112,7 +117,34 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                 .setParameter("apporteurId", apporteurId)
                 .setParameter("comparativeDate", Date.from(compDate.atStartOfDay(ZoneId.systemDefault()).toInstant()))
                 .getSingleResult();
-        
+
         return nbOfAffaires >= minAffairesSetting;
+    }
+
+    @Override
+    public boolean isPresent(Long id) {
+        return Optional.ofNullable(getById(id))
+                .map(ApporteurEntity::isDeleted)
+                .map(e -> !e)
+                .orElse(false);
+    }
+
+    @Override
+    public boolean delete(ApporteurEntity entity) {
+        entity.setDeleted(true);
+
+        try (Session session = getSession()) {
+            persistEntity(session.merge(entity));
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw e;
+        }
+
+        return isPresent(entity.getId());
+    }
+
+    @Override
+    public boolean delete(Long id) {
+        return delete(getById(id));
     }
 }

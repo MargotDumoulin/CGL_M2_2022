@@ -140,13 +140,13 @@ public class AffaireDAOTest {
 
     @Test
     public void deleteAffaireByEntity() {
-        boolean isDeleted;
+        boolean isPresent;
 
         // Suppression de l'apporteur X
 
-        isDeleted = AffaireDAO.getInstance().delete(AffaireDAO.getInstance().getById(ID_TO_DELETE));
+        isPresent = AffaireDAO.getInstance().delete(AffaireDAO.getInstance().getById(ID_TO_DELETE));
 
-        assertThat(isDeleted).isFalse();
+        assertThat(isPresent).isFalse();
         assertThat(AffaireDAO.getInstance().isPresent(ID_TO_DELETE)).isFalse();
 
         // Verification que personne n'a X en parrain
@@ -157,13 +157,13 @@ public class AffaireDAOTest {
     }
     @Test
     public void deleteAffaireById() {
-        boolean isDeleted;
+        boolean isPresent;
 
         // Suppression de l'apporteur X
 
-        isDeleted = AffaireDAO.getInstance().delete(ID_TO_DELETE_2);
+        isPresent = AffaireDAO.getInstance().delete(ID_TO_DELETE_2);
 
-        assertThat(isDeleted).isFalse();
+        assertThat(isPresent).isFalse();
         assertThat(AffaireDAO.getInstance().isPresent(ID_TO_DELETE_2)).isFalse();
 
         // Verification que personne n'a X en parrain
