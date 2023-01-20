@@ -25,7 +25,7 @@
           <div class="form-floating mb-2">
             <c:choose>
                 <c:when test="${setting.getValeur().matches(\"^[0-9]+([.,][0-9]*)?$\")}">
-                <input type="number" step="${setting.getCode().contains("PARR_VALUE") ? '0.01' : '1'}" class="form-control" id="${setting.code}" name="${setting.id.toString()}" value="${setting.valeur}">
+                <input type="number" step="${setting.getCode().contains("PARR_VALUE") ? '0.01' : '1'}" min="0" class="form-control" id="${setting.code}" name="${setting.id.toString()}" value="${setting.valeur}">
               </c:when>
               <c:otherwise>
                 <input type="text" class="form-control" id="${setting.code}" name="${setting.id.toString()}" value="${setting.valeur}">
