@@ -14,6 +14,9 @@ import org.hibernate.Transaction;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
+import java.util.Comparator;
+import java.util.stream.Stream;
+
 import static org.assertj.core.api.Assertions.assertThat;
 
 public class GetAllDAOTest {
@@ -31,7 +34,8 @@ public class GetAllDAOTest {
                 (4, 'Daddy', 'DADDY GOOD', NULL, 1),
                 (5, 'Mustang', 'COQ', 4, 0),
                 (6, 'Loic', 'VERSET', 4, 1),
-                (7, 'Tutur', 'TROGNON', 4, 0);
+                (7, 'Tutur', 'TROGNON', 4, 0),
+                (8, 'Daddy', 'Gaetan', 3, 0);
                 """;
         String insertAffaireQuery = """
                 INSERT INTO affaire (`ID`, `APPORTEUR_ID`, `DATE`, `COMMISSION_GLOBALE`) VALUES
@@ -86,7 +90,7 @@ public class GetAllDAOTest {
         assertThat(ApporteurDAO.getInstance().getAll())
                 .isNotNull()
                 .isNotEmpty()
-                .hasSize(7)
+                .hasSize(8)
                 .containsExactly(
                         ApporteurEntity.builder().id(1L).build(),
                         ApporteurEntity.builder().id(2L).build(),
@@ -94,7 +98,8 @@ public class GetAllDAOTest {
                         ApporteurEntity.builder().id(4L).build(),
                         ApporteurEntity.builder().id(5L).build(),
                         ApporteurEntity.builder().id(6L).build(),
-                        ApporteurEntity.builder().id(7L).build()
+                        ApporteurEntity.builder().id(7L).build(),
+                        ApporteurEntity.builder().id(8L).build()
                 );
     }
     @Test
@@ -102,13 +107,14 @@ public class GetAllDAOTest {
         assertThat(ApporteurDAO.getInstance().getAllAvailable())
                 .isNotNull()
                 .isNotEmpty()
-                .hasSize(5)
+                .hasSize(6)
                 .containsExactly(
                         ApporteurEntity.builder().id(1L).build(),
                         ApporteurEntity.builder().id(2L).build(),
                         ApporteurEntity.builder().id(3L).build(),
                         ApporteurEntity.builder().id(5L).build(),
-                        ApporteurEntity.builder().id(7L).build()
+                        ApporteurEntity.builder().id(7L).build(),
+                        ApporteurEntity.builder().id(8L).build()
                 );
     }
     @Test
@@ -206,6 +212,71 @@ public class GetAllDAOTest {
                         SettingEntity.builder().id(5L).build(),
                         SettingEntity.builder().id(6L).build(),
                         SettingEntity.builder().id(7L).build()
+                );
+    }
+
+    @Test
+    public void getAllApporteursWithMaxChainLength1(){
+        int maxLength = 1;
+
+        Stream<ApporteurEntity> apporteurEntityStream = ApporteurDAO
+                .getInstance()
+                .getAllApporteursWithMaxChainLength(maxLength)
+                .sorted(Comparator.comparing(ApporteurEntity::getId));
+
+
+        assertThat(apporteurEntityStream)
+                .isNotNull()
+                .hasSize(3)
+                .containsExactly(
+                        ApporteurEntity.builder().id(1L).build(),
+                        ApporteurEntity.builder().id(5L).build(),
+                        ApporteurEntity.builder().id(7L).build()
+                );
+    }
+
+    @Test
+    public void getAllApporteursWithMaxChainLength2(){
+        int maxLength = 2;
+
+        Stream<ApporteurEntity> apporteurEntityStream = ApporteurDAO
+                .getInstance()
+                .getAllApporteursWithMaxChainLength(maxLength)
+                .sorted(Comparator.comparing(ApporteurEntity::getId));
+
+
+        assertThat(apporteurEntityStream)
+                .isNotNull()
+                .hasSize(5)
+                .containsExactly(
+                        ApporteurEntity.builder().id(1L).build(),
+                        ApporteurEntity.builder().id(2L).build(),
+                        ApporteurEntity.builder().id(3L).build(),
+                        ApporteurEntity.builder().id(5L).build(),
+                        ApporteurEntity.builder().id(7L).build()
+                );
+    }
+
+    @Test
+    public void getAllApporteursWithMaxChainLength3(){
+        int maxLength = 3;
+
+        Stream<ApporteurEntity> apporteurEntityStream = ApporteurDAO
+                .getInstance()
+                .getAllApporteursWithMaxChainLength(maxLength)
+                .sorted(Comparator.comparing(ApporteurEntity::getId));
+
+
+        assertThat(apporteurEntityStream)
+                .isNotNull()
+                .hasSize(6)
+                .containsExactly(
+                        ApporteurEntity.builder().id(1L).build(),
+                        ApporteurEntity.builder().id(2L).build(),
+                        ApporteurEntity.builder().id(3L).build(),
+                        ApporteurEntity.builder().id(5L).build(),
+                        ApporteurEntity.builder().id(7L).build(),
+                        ApporteurEntity.builder().id(8L).build()
                 );
     }
 }
