@@ -151,14 +151,14 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
     public Stream<ApporteurEntity> getAllApporteursWithMaxChainLength(int length) {
         String sqlQuery = "" +
                 "WITH RECURSIVE cte (id, prenom, nom, parrain_id, is_deleted, depth) AS (" +
-                "SELECT id, prenom, nom, parrain_id, is_deleted, 0 FROM apporteur WHERE parrain_id IS NULL " +
+                    "SELECT id, prenom, nom, parrain_id, is_deleted, 0 FROM apporteur a WHERE parrain_id IS NULL " +
+                            "OR EXISTS (SELECT 1 FROM apporteur b WHERE b.ID = a.PARRAIN_ID AND b.IS_DELETED = TRUE) " +
                 "UNION ALL " +
                 "SELECT a.id, a.prenom, a.nom, a.parrain_id, a.is_deleted, cte.depth + 1 FROM apporteur a " +
-                "JOIN cte ON a.parrain_id = cte.id" +
+                "JOIN cte ON a.PARRAIN_ID = cte.ID AND a.IS_DELETED = FALSE" +
                 ")" +
                 "SELECT id, prenom, nom, parrain_id, is_deleted FROM cte " +
                 "WHERE depth < :maxLength and is_deleted = FALSE";
-
         Stream<ApporteurEntity> apporteurs = getSession()
                 .createNativeQuery(sqlQuery, ApporteurEntity.class)
                 .setParameter("maxLength", length)
