@@ -151,7 +151,7 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
     public Stream<ApporteurEntity> getAllApporteursWithMaxChainLength(int length){
         String sqlQuery = "" +
                 "WITH RECURSIVE cte (id, prenom, nom, parrain_id, is_deleted, depth) AS (" +
-                "SELECT id, prenom, nom, parrain_id, is_deleted, 1 FROM apporteur WHERE parrain_id IS NULL " + //AJOUTER LE FILTRE APPORTEUR NON deleted
+                "SELECT id, prenom, nom, parrain_id, is_deleted, 0 FROM apporteur WHERE parrain_id IS NULL " + //AJOUTER LE FILTRE APPORTEUR NON deleted
                 "UNION ALL " +
                 "SELECT a.id, a.prenom, a.nom, a.parrain_id, a.is_deleted, cte.depth + 1 FROM apporteur a " +
                 "JOIN cte ON a.parrain_id = cte.id" +
