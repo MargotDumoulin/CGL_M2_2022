@@ -72,8 +72,8 @@
                             <c:if test="${operation != 'Modifier'}">
                                 <option value="" selected>Aucun</option>
                             </c:if>
-                            <c:forEach items="${apporteurs}" var="apporteur" varStatus="status">
-                                <option value="<c:out value="${apporteur.id}"/>"><c:out value="${apporteur.nom}"/> - <c:out value="${apporteur.prenom}"/></option>
+                            <c:forEach items="${parrains}" var="parrain" varStatus="status">
+                                <option value="<c:out value="${parrain.id}"/>"><c:out value="${parrain.nom}"/> - <c:out value="${parrain.prenom}"/></option>
                             </c:forEach>
                         </select>
                         <label for="parrain">Parrain (optionnel):</label>

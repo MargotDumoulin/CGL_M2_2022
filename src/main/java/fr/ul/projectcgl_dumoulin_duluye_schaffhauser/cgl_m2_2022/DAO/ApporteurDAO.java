@@ -1,10 +1,12 @@
 package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO;
 
+import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.AffaireEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Stream;
 
 public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
@@ -81,5 +83,28 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                 .getSingleResult();
         
         return nbOfAffaires >= minAffairesSetting;
+    }
+    public Stream<ApporteurEntity> getAllApporteursWithMaxChainLength(){
+        int length = Integer.parseInt(SettingsDAO.getInstance().getByCode("NB_PARRAINGE_MAX").getValeur());
+
+        return getAllApporteursWithMaxChainLength(length);
+    }
+    public Stream<ApporteurEntity> getAllApporteursWithMaxChainLength(int length){
+        String sqlQuery = "" +
+                "WITH RECURSIVE cte (id, prenom, nom, parrain_id, is_deleted, depth) AS (" +
+                "SELECT id, prenom, nom, parrain_id, is_deleted, 1 FROM apporteur WHERE parrain_id IS NULL " + //AJOUTER LE FILTRE APPORTEUR NON deleted
+                "UNION ALL " +
+                "SELECT a.id, a.prenom, a.nom, a.parrain_id, a.is_deleted, cte.depth + 1 FROM apporteur a " +
+                "JOIN cte ON a.parrain_id = cte.id" +
+        ")" +
+        "SELECT id, prenom, nom, parrain_id, is_deleted FROM cte " +
+        "WHERE depth < :maxLength and is_deleted = FALSE";
+
+        Stream<ApporteurEntity> apporteurs = getSession()
+                .createNativeQuery(sqlQuery, ApporteurEntity.class)
+                .setParameter("maxLength", length)
+                .getResultStream();
+
+        return apporteurs;
     }
 }
