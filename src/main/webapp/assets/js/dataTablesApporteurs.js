@@ -31,17 +31,17 @@ $(document).ready(function () {
             {
                 data: 'totalCommissionsMCourant',
                 width: "150px",
-                render: (data, _type, row) => row['isDeleted'] ? `<div class="deleted-apporteur">${data}</div>` : data
+                render: (data, _type, row) => row['isDeleted'] ? `<div class="deleted-apporteur">${Math.round(data*100)/100}</div>` : Math.round(data*100)/100
             },
             {
                 data: 'totalCommissionsMM1',
                 width: "150px",
-                render: (data, _type, row) => row['isDeleted'] ? `<div class="deleted-apporteur">${data}</div>` : data
+                render: (data, _type, row) => row['isDeleted'] ? `<div class="deleted-apporteur">${Math.round(data*100)/100}</div>` : Math.round(data*100)/100
             },
             {
                 data: 'totalCommissionsMM2',
                 width: "150px",
-                render: (data, _type, row) => row['isDeleted'] ? `<div class="deleted-apporteur">${data}</div>` : data
+                render: (data, _type, row) => row['isDeleted'] ? `<div class="deleted-apporteur">${Math.round(data*100)/100}</div>` : Math.round(data*100)/100
             },
             {
                 data: null,
