@@ -2,7 +2,6 @@ package fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Controller;
 
 import com.google.gson.Gson;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.AffaireDAO;
-import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.ApporteurDAO;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.DAO.CommissionDAO;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.AffaireEntity;
 import fr.ul.projectcgl_dumoulin_duluye_schaffhauser.cgl_m2_2022.Entity.ApporteurEntity;
@@ -13,10 +12,8 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.checkerframework.checker.units.qual.A;
 
 import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -61,18 +58,18 @@ public class AffairesDataServlet extends HttpServlet {
 
         if (appId != null && appId.matches("-?\\d+(\\.\\d+)?")) {
             affairesEntities = AffaireDAO.getInstance().getAllDirByAppId(pageSize, start, Long.parseLong(appId), columns[columnToOrder], orderDirection, filterByCurrMonth);
-            numberOfResults = AffaireDAO.getInstance().getAllDirByAppId(Long.parseLong(appId)).count();
+            numberOfResults = AffaireDAO.getInstance().getAllDirByAppIdNbOfResults(Long.parseLong(appId), filterByCurrMonth);
         } else if (appIdAll != null && appIdAll.matches("-?\\d+(\\.\\d+)?")) {
             affairesEntities = AffaireDAO.getInstance().getAllByAppId(pageSize, start, Long.parseLong(appIdAll), columns[columnToOrder], orderDirection, filterByCurrMonth);
-            numberOfResults = AffaireDAO.getInstance().getAllByAppId(Long.parseLong(appIdAll)).count();
+            numberOfResults = AffaireDAO.getInstance().getAllByAppIdNbOfResults(Long.parseLong(appIdAll), filterByCurrMonth);
         } else {
             affairesEntities = AffaireDAO.getInstance().getAll(pageSize, start, columns[columnToOrder], orderDirection, filterByCurrMonth);
-            numberOfResults = AffaireDAO.getInstance().getAll().count();
+            numberOfResults = AffaireDAO.getInstance().getAllNbOfResults(filterByCurrMonth);
         }
 
         affairesEntities.forEach(a -> {
             ApporteurEntity appEnt = a.getApporteur();
-            Apporteur apporteur = new Apporteur(appEnt.getId(), false, appEnt.getNom(), appEnt.getPrenom(), getParrain(appEnt.getParrain()));
+            Apporteur apporteur = new Apporteur(appEnt.getId(), false, appEnt.getNom(), appEnt.getPrenom(), getParrain(appEnt.getParrain()), appEnt.isDeleted());
             List<CommissionPerso> comList = CommissionDAO.getInstance().getCommissionsByAffaire(a.getId()).toList();
 
             affaires.add(new Affaire(a.getId(), apporteur, a.getDate(), a.getCommissionGlobale(), comList));
@@ -93,9 +90,9 @@ public class AffairesDataServlet extends HttpServlet {
 
         ApporteurEntity parrFromParrEnt = parrEnt.getParrain();
         if (parrFromParrEnt == null) {
-            return new Apporteur(parrEnt.getId(), false, parrEnt.getNom(), parrEnt.getPrenom());
+            return new Apporteur(parrEnt.getId(), false, parrEnt.getNom(), parrEnt.getPrenom(), parrEnt.isDeleted());
         }
 
-        return new Apporteur(parrEnt.getId(), false, parrEnt.getNom(), parrEnt.getPrenom(), getParrain(parrFromParrEnt));
+        return new Apporteur(parrEnt.getId(), false, parrEnt.getNom(), parrEnt.getPrenom(), getParrain(parrFromParrEnt), parrEnt.isDeleted());
     }
 }

@@ -32,6 +32,28 @@ public class CommissionDAO {
                 .getResultStream();
     }
 
+    public CommissionEntity getById(CommissionEntityId id) {
+        try (Session session = HibernateUtils.getInstance().getSession()) {
+            return session.get(CommissionEntity.class, id);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    public CommissionEntity getById(AffaireEntity affaire, ApporteurEntity apporteur) {
+        return getById(CommissionEntityId.builder()
+                .affaire(affaire)
+                .apporteur(apporteur)
+                .build());
+    }
+    public CommissionEntity getById(Long affaireId, Long apporteurId) {
+        return getById(CommissionEntityId.builder()
+                .affaire(AffaireDAO.getInstance().getById(affaireId))
+                .apporteur(ApporteurDAO.getInstance().getById(apporteurId))
+                .build());
+    }
+
     public void insertCommissions(AffaireEntity affaire, Session session) {
         Double globalCom = affaire.getCommissionGlobale();
         Double totalComParrain = 0.0;
@@ -41,14 +63,14 @@ public class CommissionDAO {
 
         if (parr != null) {
             // Insert commission for first parrain
-            Double parrainCom = ApporteurDAO.getInstance().getIsAffilie(parr.getId()) ? globalCom * dirParrPercent : 0;
+            Double parrainCom = (ApporteurDAO.getInstance().getIsAffilie(parr.getId()) && !parr.isDeleted()) ? globalCom * dirParrPercent : 0;
             totalComParrain += parrainCom;
             this.insertCommission(affaire, parr, session, parrainCom);
 
             // Insert commissions pour les parrains d'après...
             parr = parr.getParrain();
             while (parr != null) {
-                parrainCom = ApporteurDAO.getInstance().getIsAffilie(parr.getId()) ? parrainCom * indirParrPercent : 0;
+                parrainCom = (ApporteurDAO.getInstance().getIsAffilie(parr.getId()) && !parr.isDeleted()) ? parrainCom * indirParrPercent : 0;
                 totalComParrain += parrainCom;
                 this.insertCommission(affaire, parr, session, parrainCom);
 
@@ -66,8 +88,8 @@ public class CommissionDAO {
         session.merge(com);
     }
 
-    public Stream<Double> getTotalByMonthAndApporteurId(int month, int year, Long apporteurId) {
-         String hqlQuery = """
+    public Double getTotalByMonthAndApporteurId(int month, int year, Long apporteurId) {
+        String hqlQuery = """
                 SELECT SUM(commission.montant)
                 FROM Commission AS commission, Affaire AS affaire
                 WHERE commission.id.affaire.id  = affaire.id
@@ -81,7 +103,7 @@ public class CommissionDAO {
                 .setParameter("month", month)
                 .setParameter("year", year)
                 .setParameter("apporteurId", apporteurId)
-                .getResultStream();
+                .getSingleResult();
     }
 
     public Stream<CommissionPerso> getCommissionsByAffaire(Long affaireId) {

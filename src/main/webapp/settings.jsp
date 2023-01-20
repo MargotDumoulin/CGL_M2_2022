@@ -1,4 +1,3 @@
-<%@ page import="com.fasterxml.jackson.annotation.ObjectIdGenerators" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
@@ -23,23 +22,15 @@
       </div>
       <form action="settings" method="post">
         <c:forEach items="${settings}" var="setting" varStatus="status">
-          <%
-            String fieldType = request.getParameter("setting");
-            boolean isInteger = true;
-            if (fieldType == null) {
-              fieldType = "text";
-            }
-            else{
-              try {
-                Integer.parseInt(request.getParameter("setting"));
-              }
-              catch(NumberFormatException e){
-                isInteger = false;
-              }
-            }
-          %>
           <div class="form-floating mb-2">
-            <input type="<%= isInteger ? "number" : "text"%>" class="form-control" id="${setting.code}" name="${setting.id.toString()}" value="${setting.valeur}">
+            <c:choose>
+                <c:when test="${setting.getValeur().matches(\"^[0-9]+([.,][0-9]*)?$\")}">
+                <input type="number" step="0.01" class="form-control" id="${setting.code}" name="${setting.id.toString()}" value="${setting.valeur}">
+              </c:when>
+              <c:otherwise>
+                <input type="text" class="form-control" id="${setting.code}" name="${setting.id.toString()}" value="${setting.valeur}">
+              </c:otherwise>
+            </c:choose>
             <label for="${setting.code}">${setting.label} : </label>
           </div>
           <br>
