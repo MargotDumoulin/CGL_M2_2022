@@ -11,6 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
@@ -23,8 +24,8 @@ public class AddApporteurServlet extends HttpServlet {
             throws ServletException, IOException {
         request.setAttribute("operation", "Ajouter");
 
-        Stream<ApporteurEntity> apporteurs = ApporteurDAO.getInstance().getAll();
-        request.setAttribute("apporteurs", apporteurs.toArray());
+        Stream<ApporteurEntity> parrains = ApporteurDAO.getInstance().getAllApporteursWithMaxChainLength();
+        request.setAttribute("parrains", parrains.toArray());
 
         String appId = request.getParameter("appId");
 
