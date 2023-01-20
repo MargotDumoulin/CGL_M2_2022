@@ -148,16 +148,16 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
 
         return getAllApporteursWithMaxChainLength(length);
     }
-    public Stream<ApporteurEntity> getAllApporteursWithMaxChainLength(int length){
+    public Stream<ApporteurEntity> getAllApporteursWithMaxChainLength(int length) {
         String sqlQuery = "" +
                 "WITH RECURSIVE cte (id, prenom, nom, parrain_id, is_deleted, depth) AS (" +
                 "SELECT id, prenom, nom, parrain_id, is_deleted, 0 FROM apporteur WHERE parrain_id IS NULL " +
                 "UNION ALL " +
                 "SELECT a.id, a.prenom, a.nom, a.parrain_id, a.is_deleted, cte.depth + 1 FROM apporteur a " +
                 "JOIN cte ON a.parrain_id = cte.id" +
-        ")" +
-        "SELECT id, prenom, nom, parrain_id, is_deleted FROM cte " +
-        "WHERE depth < :maxLength and is_deleted = FALSE";
+                ")" +
+                "SELECT id, prenom, nom, parrain_id, is_deleted FROM cte " +
+                "WHERE depth < :maxLength and is_deleted = FALSE";
 
         Stream<ApporteurEntity> apporteurs = getSession()
                 .createNativeQuery(sqlQuery, ApporteurEntity.class)
@@ -165,7 +165,7 @@ public class ApporteurDAO extends AbstractDAO<ApporteurEntity, Long> {
                 .getResultStream();
 
         return apporteurs;
-
+    }
     
     @Override
     public boolean isPresent(Long id) {
